@@ -1,15 +1,22 @@
 import express, { Express } from 'express';
-import  { ChattyServer }  from '../src/setupServer';
-import mongoConnect from './db';
+import { ChattyServer } from '@root/setupServer';
+import databaseConnection from '@root/setupDatabase';
+import { config } from '@root/config';
 
 class Application {
     public initialize(): void {
-        mongoConnect();
-        const app: Express = express()
-        const server: ChattyServer = new ChattyServer(app)
-        server.start()
+        this.loadConfig();
+        databaseConnection();
+        const app: Express = express();
+        const server: ChattyServer = new ChattyServer(app);
+        server.start();
+    }
+
+    public loadConfig(): void {
+        config.validateConfig();
+        config.cloudinaryConfig();
     }
 }
 
-const application: Application = new Application();
-application.initialize();
+const app: Application = new Application();
+app.initialize();
