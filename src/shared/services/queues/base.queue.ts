@@ -1,58 +1,83 @@
-import Logger from 'bunyan'
+import Logger from 'bunyan';
 import { config } from '@root/config';
 import { IAuthJob } from '@auth/interfaces/auth.interface';
 import { IEmailJob, IUserJob } from '@user/interfaces/user.interface';
 import { createBullBoard } from '@bull-board/api';
 import { ExpressAdapter } from '@bull-board/express';
 import { BullMQAdapter } from '@bull-board/api/bullMQAdapter';
-import { Job, Queue as QueueMQ, Worker } from 'bullmq';
+import { Job, Queue as QueueMQ, QueueEvents, Worker } from 'bullmq';
+// import Queue, { ProcessCallbackFunction } from 'bull';
 
-type IBaseJobData =
-    | IAuthJob
-    | IEmailJob
-    | IUserJob;
+type IBaseJobData = IAuthJob | IEmailJob | IUserJob;
 
-    let bullAdapters: BullMQAdapter[] = [];
-    export let serverAdapter: ExpressAdapter;
+let bullAdapters: BullMQAdapter[] = [];
+export let serverAdapter: ExpressAdapter;
 
-const sleep = (t: number) => new Promise((resolve) => setTimeout(resolve, t * 1000));
+const sleep = (t: number) =>
+    new Promise((resolve) => setTimeout(resolve, t * 1000));
 
 export abstract class BaseQueue {
     queue: QueueMQ;
     log: Logger;
-  
+
     constructor(queueName: string) {
-      this.queue = new QueueMQ(queueName, { connection: { port: 6379, password: '', host: 'localhost',}});
-      bullAdapters.push(new BullMQAdapter(this.queue));
-      bullAdapters = [...new Set(bullAdapters)];
-      serverAdapter = new ExpressAdapter();
-      serverAdapter.setBasePath('/queues');
-  
-      createBullBoard({
-        queues: bullAdapters,
-        serverAdapter
-      });
-  
-      this.log = config.createLogger(`${queueName}Queue`);
-  
-      this.queue.on('removed', (job) => {
-        job.remove()
-      });
-  
-      this.queue.on('error', (err) => {
-        this.log.info(`err Job ${err} completed`);
-      });
-  
-      this.queue.on('progress', (job: Job<IBaseJobData>) => {
-        this.log.info(`error Job ${job.id} is in progress`);
-      });
+        this.queue = new QueueMQ(queueName, {
+            connection: { port: 6379, password: '', host: 'localhost' },
+        });
+        bullAdapters.push(new BullMQAdapter(this.queue));
+        bullAdapters = [...new Set(bullAdapters)];
+        serverAdapter = new ExpressAdapter();
+        serverAdapter.setBasePath('/queues');
+
+        createBullBoard({
+            queues: bullAdapters,
+            serverAdapter,
+        });
+
+        this.log = config.createLogger(`${queueName}Queue`);
+
+        this.queue.on('removed', (job) => {
+            job.remove();
+        });
+
+        this.queue.on('error', (err) => {
+            this.log.info(`err Job ${err} completed`);
+        });
+
+        this.queue.on('progress', (job: Job<IBaseJobData>) => {
+            this.log.info(`Job ${job.id} is in progress`);
+        });
     }
-  
+
     protected addJob(name: string, data: IBaseJobData): void {
-      this.queue.add(name, data, { attempts: 3, backoff: { type: 'fixed', delay: 5000 } });
+        this.queue.add(name, data, {
+            attempts: 3,
+            backoff: { type: 'fixed', delay: 5000 },
+        });
     }
-  
-    // protected processJob(name: string, concurrency: number, callback: ): void {
-    //   this.queue.r (name, concurrency, callback);
-    // }
-  }
+
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    protected processJob(name: string, concurrency: number, callback: any): void {
+        const worker = new Worker(this.queue.name, async (job: Job<IBaseJobData>) => {
+            try {
+                await callback(job);
+                this.log.info(`Job ${job.id} has been processed successfully`);
+            } catch (error) {
+                this.log.error(`Error processing job ${job.id}: ${error}`);
+                throw error;
+            }
+        }, { concurrency });
+
+        worker.on('completed', (job: Job) => {
+            this.log.info(`Job ${job.id} completed`);
+        });
+
+        worker.on('failed', (job: Job | undefined, error: Error) => {
+            this.log.info(`Job ${job?.id} failed with error ${error.message}`);
+        });
+
+        worker.on('progress', (job: Job<IBaseJobData>, progress: number | object) => {
+            this.log.info(`Job ${job.id} is ${progress}% complete`);
+        });
+    }
+}
