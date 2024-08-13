@@ -8,15 +8,17 @@ import { Helpers } from '@global/helpers/helpers';
 import { UploadApiResponse } from 'cloudinary';
 import { uploads } from '@global/helpers/cloudinary-upload';
 import HTTP_STATUS from 'http-status-codes';
-// import { IUserDocument } from '@user/interfaces/user.interface';
-// import { UserCache } from '@service/redis/user.cache';
-// import JWT from 'jsonwebtoken';
+import { IUserDocument } from '@user/interfaces/user.interface';
+import { UserCache } from '@service/redis/user.cache';
+import JWT from 'jsonwebtoken';
 // import { authQueue } from '@service/queues/auth.queue';
 // import { userQueue } from '@service/queues/user.queue';
-// import { config } from '@root/config';
+import { config } from '@root/config';
 import { BadRequestError } from '@global/helpers/error-handler';
+import { authQueue } from '@service/queues/auth.queue';
+import { omit } from 'lodash';
 
-// const userCache: UserCache = new UserCache();
+const userCache: UserCache = new UserCache();
 
 export class SignUp {
   @joiValidation(signupSchema)
@@ -47,12 +49,13 @@ export class SignUp {
       }
 
     //   // Add to redis cache
-    //   const userDataForCache: IUserDocument = SignUp.prototype.userData(authData, userObjectId);
-    //   userDataForCache.profilePicture = `https://res.cloudinary.com/dyamr9ym3/image/upload/v${result.version}/${userObjectId}`;
-    //   await userCache.saveUserToCache(`${userObjectId}`, uId, userDataForCache);
+      const userDataForCache: IUserDocument = SignUp.prototype.userData(authData, userObjectId);
+      userDataForCache.profilePicture = `https://res.cloudinary.com/dyjgikbog/image/upload/v${result.version}/${userObjectId}`;
+      await userCache.saveUserToCache(`${userObjectId}`, uId, userDataForCache);
 
+      omit(userDataForCache, ['uId', 'username', 'email', 'avatarColor', 'password'])
     //   // Add to database
-    //   authQueue.addAuthUserJob('addAuthUserToDB', { value: authData });
+      authQueue.addAuthUserJob('addAuthUserToDB', { value: userDataForCache })
     //   userQueue.addUserJob('addUserToDB', { value: userDataForCache });
 
     //   const userJwt: string = SignUp.prototype.signToken(authData, userObjectId);
@@ -62,18 +65,18 @@ export class SignUp {
 
 }
 
-// private signToken(data: IAuthDocument, userObjectId: ObjectId): string {
-//     return JWT.sign(
-//       {
-//         userId: userObjectId,
-//         uId: data.uId,
-//         email: data.email,
-//         username: data.username,
-//         avatarColor: data.avatarColor
-//       },
-//       config.JWT_TOKEN!
-//     );
-//   }
+private signToken(data: IAuthDocument, userObjectId: ObjectId): string {
+    return JWT.sign(
+      {
+        userId: userObjectId,
+        uId: data.uId,
+        email: data.email,
+        username: data.username,
+        avatarColor: data.avatarColor
+      },
+      config.JWT_TOKEN!
+    );
+  }
 
   private signupData(data: ISignUpData): IAuthDocument {
     const { _id, username, email, uId, password, avatarColor } = data;
@@ -88,40 +91,40 @@ export class SignUp {
     } as IAuthDocument;
   }
 
-//   private userData(data: IAuthDocument, userObjectId: ObjectId): IUserDocument {
-//     const { _id, username, email, uId, password, avatarColor } = data;
-//     return {
-//       _id: userObjectId,
-//       authId: _id,
-//       uId,
-//       username: Helpers.firstLetterUppercase(username),
-//       email,
-//       password,
-//       avatarColor,
-//       profilePicture: '',
-//       blocked: [],
-//       blockedBy: [],
-//       work: '',
-//       location: '',
-//       school: '',
-//       quote: '',
-//       bgImageVersion: '',
-//       bgImageId: '',
-//       followersCount: 0,
-//       followingCount: 0,
-//       postsCount: 0,
-//       notifications: {
-//         messages: true,
-//         reactions: true,
-//         comments: true,
-//         follows: true
-//       },
-//       social: {
-//         facebook: '',
-//         instagram: '',
-//         twitter: '',
-//         youtube: ''
-//       }
-//     } as unknown as IUserDocument;
-//   }
+  private userData(data: IAuthDocument, userObjectId: ObjectId): IUserDocument {
+    const { _id, username, email, uId, password, avatarColor } = data;
+    return {
+      _id: userObjectId,
+      authId: _id,
+      uId,
+      username: Helpers.firstLetterUppercase(username),
+      email,
+      password,
+      avatarColor,
+      profilePicture: '',
+      blocked: [],
+      blockedBy: [],
+      work: '',
+      location: '',
+      school: '',
+      quote: '',
+      bgImageVersion: '',
+      bgImageId: '',
+      followersCount: 0,
+      followingCount: 0,
+      postsCount: 0,
+      notifications: {
+        messages: true,
+        reactions: true,
+        comments: true,
+        follows: true
+      },
+      social: {
+        facebook: '',
+        instagram: '',
+        twitter: '',
+        youtube: ''
+      }
+    } as unknown as IUserDocument;
+  }
 }
