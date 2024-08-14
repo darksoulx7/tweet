@@ -6,7 +6,6 @@ import { createBullBoard } from '@bull-board/api';
 import { ExpressAdapter } from '@bull-board/express';
 import { BullMQAdapter } from '@bull-board/api/bullMQAdapter';
 import { Job, Queue as QueueMQ, QueueEvents, Worker } from 'bullmq';
-// import Queue, { ProcessCallbackFunction } from 'bull';
 
 type IBaseJobData = IAuthJob | IEmailJob | IUserJob;
 
@@ -41,11 +40,11 @@ export abstract class BaseQueue {
         });
 
         this.queue.on('error', (err) => {
-            this.log.info(`err Job ${err} completed`);
+            this.log.info(`${queueName} - err Job ${err} completed`);
         });
 
         this.queue.on('progress', (job: Job<IBaseJobData>) => {
-            this.log.info(`Job ${job.id} is in progress`);
+            this.log.info(`${queueName} - Queue Job ${job.id} is in progress`);
         });
     }
 
@@ -61,7 +60,7 @@ export abstract class BaseQueue {
         const worker = new Worker(this.queue.name, async (job: Job<IBaseJobData>) => {
             try {
                 await callback(job);
-                this.log.info(`Job ${job.id} has been processed successfully`);
+                this.log.info(`${name} - worker job ${job.id} has been processed successfully`);
             } catch (error) {
                 this.log.error(`Error processing job ${job.id}: ${error}`);
                 throw error;
@@ -69,15 +68,15 @@ export abstract class BaseQueue {
         }, { concurrency });
 
         worker.on('completed', (job: Job) => {
-            this.log.info(`Job ${job.id} completed`);
+            this.log.info(`${name} - worker job ${job.id} completed`);
         });
 
         worker.on('failed', (job: Job | undefined, error: Error) => {
-            this.log.info(`Job ${job?.id} failed with error ${error.message}`);
+            this.log.info(`${name} - worker job ${job?.id} failed with error ${error.message}`);
         });
 
         worker.on('progress', (job: Job<IBaseJobData>, progress: number | object) => {
-            this.log.info(`Job ${job.id} is ${progress}% complete`);
+            this.log.info(`${name} - worker job ${job.id} is ${progress}% complete`);
         });
     }
 }
