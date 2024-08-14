@@ -15,7 +15,7 @@ import { authQueue } from '@service/queues/auth.queue';
 import { userQueue } from '@service/queues/user.queue';
 import { config } from '@root/config';
 import { BadRequestError } from '@global/helpers/error-handler';
-import { omit } from 'lodash';
+// import { omit } from 'lodash';
 
 const userCache: UserCache = new UserCache();
 
@@ -44,40 +44,20 @@ export class SignUp {
             password,
             avatarColor,
         });
-        const result: UploadApiResponse = (await uploads(
-            avatarImage,
-            `${userObjectId}`,
-            true,
-            true,
-        )) as UploadApiResponse;
+        const result: UploadApiResponse = (await uploads(avatarImage, `${userObjectId}`, true, true)) as UploadApiResponse;
         if (!result?.public_id) {
             throw new BadRequestError(
                 'File upload: Error occurred. Try again.',
             );
         }
 
-        const userDataForCache: IUserDocument = SignUp.prototype.userData(
-            authData,
-            userObjectId,
-        );
+        const userDataForCache: IUserDocument = SignUp.prototype.userData(authData, userObjectId);
         userDataForCache.profilePicture = `https://res.cloudinary.com/dyjgikbog/image/upload/v${result.version}/${userObjectId}`;
-        await userCache.saveUserToCache(
-            `${userObjectId}`,
-            uId,
-            userDataForCache,
-        );
+        await userCache.saveUserToCache(`${userObjectId}`, uId, userDataForCache);
 
-        omit(userDataForCache, [
-            'uId',
-            'username',
-            'email',
-            'avatarColor',
-            'password',
-        ]);
+        // omit(userDataForCache, ['uId', 'username', 'email', 'avatarColor', 'password',]);
 
-        authQueue.addAuthUserJob('addAuthUserToDB', {
-            value: authData,
-        });
+        authQueue.addAuthUserJob('addAuthUserToDB', { value: authData });
         userQueue.addUserJob('addUserToDB', { value: userDataForCache });
 
         const userJwt: string = SignUp.prototype.signToken(
