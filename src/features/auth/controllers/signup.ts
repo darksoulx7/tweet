@@ -76,7 +76,7 @@ export class SignUp {
         ]);
 
         authQueue.addAuthUserJob('addAuthUserToDB', {
-            value: userDataForCache,
+            value: authData,
         });
         userQueue.addUserJob('addUserToDB', { value: userDataForCache });
 
@@ -87,9 +87,8 @@ export class SignUp {
         req.session = { jwt: userJwt };
         res.status(HTTP_STATUS.CREATED).json({
             message: 'User created successfully',
-            authData,
-            userDataForCache,
-            userJwt
+            user: userDataForCache,
+            token: userJwt
         });
     }
 
