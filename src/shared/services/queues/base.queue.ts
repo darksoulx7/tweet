@@ -6,8 +6,27 @@ import { createBullBoard } from '@bull-board/api';
 import { ExpressAdapter } from '@bull-board/express';
 import { BullMQAdapter } from '@bull-board/api/bullMQAdapter';
 import { Job, Queue as QueueMQ, QueueEvents, Worker } from 'bullmq';
+import { IPostJobData } from '@post/interfaces/post.interface';
+import { IReactionJob } from '@reaction/interfaces/reaction.interface';
+import { ICommentJob } from '@comment/interfaces/comment.interface';
+import { IBlockedUserJobData, IFollowerJobData } from '@follower/interfaces/follower.interface';
+import { INotificationJobData } from '@notification/interfaces/notification.interface';
+import { IFileImageJobData } from '@image/interfaces/image.interface';
+import { IChatJobData, IMessageData } from '@chat/interfaces/chat.interface';
 
-type IBaseJobData = IAuthJob | IEmailJob | IUserJob;
+type IBaseJobData =
+| IAuthJob
+| IEmailJob
+| IPostJobData
+| IReactionJob
+| ICommentJob
+| IFollowerJobData
+| IBlockedUserJobData
+| INotificationJobData
+| IFileImageJobData
+| IChatJobData
+| IMessageData
+| IUserJob;
 
 let bullAdapters: BullMQAdapter[] = [];
 export let serverAdapter: ExpressAdapter;
