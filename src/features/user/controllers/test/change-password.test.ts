@@ -1,4 +1,3 @@
-/* eslint-disable @typescript-eslint/no-explicit-any */
 // import { Request, Response } from 'express';
 // import { authMockRequest, authMockResponse, authUserPayload } from '@root/mocks/auth.mock';
 // import { Update } from '@user/controllers/change-password';

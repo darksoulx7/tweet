@@ -55,7 +55,6 @@ export abstract class BaseQueue {
         });
     }
 
-    // eslint-disable-next-line @typescript-eslint/no-explicit-any
     protected processJob(
         name: string,
         concurrency: number,

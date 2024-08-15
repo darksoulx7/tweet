@@ -1,4 +1,3 @@
-/* eslint-disable @typescript-eslint/no-explicit-any */
 import { BaseQueue } from './base.queue';
 import { userWorker } from '@service/workers/user.worker';
 
