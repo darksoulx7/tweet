@@ -1,7 +1,7 @@
 import { userService } from '@service/db/user.service';
 import { BaseQueue } from './base.queue';
 
-import { userWorker } from '@service/workers/user.worker';
+import { userWorker } from '@worker/user.worker';
 import { Job } from 'bullmq';
 import Logger from 'bunyan';
 import { config } from '@root/config';
