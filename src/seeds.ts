@@ -57,7 +57,7 @@ async function seedUserData(count: number): Promise<void> {
   let i = 0;
   try {
     for (i = 0; i < count; i++) {
-      const username: string = `ultimer3${i}`
+      const username: string = `ultimer3${i}`;
       const color = avatarColor();
       const avatar = generateAvatar(username.charAt(0).toUpperCase(), color);
 
