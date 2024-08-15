@@ -44,16 +44,28 @@ export class SignUp {
             password,
             avatarColor,
         });
-        const result: UploadApiResponse = (await uploads(avatarImage, `${userObjectId}`, true, true)) as UploadApiResponse;
+        const result: UploadApiResponse = (await uploads(
+            avatarImage,
+            `${userObjectId}`,
+            true,
+            true,
+        )) as UploadApiResponse;
         if (!result?.public_id) {
             throw new BadRequestError(
                 'File upload: Error occurred. Try again.',
             );
         }
 
-        const userDataForCache: IUserDocument = SignUp.prototype.userData(authData, userObjectId);
+        const userDataForCache: IUserDocument = SignUp.prototype.userData(
+            authData,
+            userObjectId,
+        );
         userDataForCache.profilePicture = `https://res.cloudinary.com/dyjgikbog/image/upload/v${result.version}/${userObjectId}`;
-        await userCache.saveUserToCache(`${userObjectId}`, uId, userDataForCache);
+        await userCache.saveUserToCache(
+            `${userObjectId}`,
+            uId,
+            userDataForCache,
+        );
 
         // omit(userDataForCache, ['uId', 'username', 'email', 'avatarColor', 'password',]);
 
@@ -68,7 +80,7 @@ export class SignUp {
         res.status(HTTP_STATUS.CREATED).json({
             message: 'User created successfully',
             user: userDataForCache,
-            token: userJwt
+            token: userJwt,
         });
     }
 

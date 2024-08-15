@@ -56,27 +56,45 @@ export abstract class BaseQueue {
     }
 
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
-    protected processJob(name: string, concurrency: number, callback: any): void {
-        const worker = new Worker(this.queue.name, async (job: Job<IBaseJobData>) => {
-            try {
-                await callback(job);
-                this.log.info(`${name} - worker job ${job.id} has been processed successfully`);
-            } catch (error) {
-                this.log.error(`Error processing job ${job.id}: ${error}`);
-                throw error;
-            }
-        }, { concurrency });
+    protected processJob(
+        name: string,
+        concurrency: number,
+        callback: any,
+    ): void {
+        const worker = new Worker(
+            this.queue.name,
+            async (job: Job<IBaseJobData>) => {
+                try {
+                    await callback(job);
+                    this.log.info(
+                        `${name} - worker job ${job.id} has been processed successfully`,
+                    );
+                } catch (error) {
+                    this.log.error(`Error processing job ${job.id}: ${error}`);
+                    throw error;
+                }
+            },
+            { concurrency },
+        );
 
         worker.on('completed', (job: Job) => {
             this.log.info(`${name} - worker job ${job.id} completed`);
+            job.remove();
         });
 
         worker.on('failed', (job: Job | undefined, error: Error) => {
-            this.log.info(`${name} - worker job ${job?.id} failed with error ${error.message}`);
+            this.log.info(
+                `${name} - worker job ${job?.id} failed with error ${error.message}`,
+            );
         });
 
-        worker.on('progress', (job: Job<IBaseJobData>, progress: number | object) => {
-            this.log.info(`${name} - worker job ${job.id} is ${progress}% complete`);
-        });
+        worker.on(
+            'progress',
+            (job: Job<IBaseJobData>, progress: number | object) => {
+                this.log.info(
+                    `${name} - worker job ${job.id} is ${progress}% complete`,
+                );
+            },
+        );
     }
 }
