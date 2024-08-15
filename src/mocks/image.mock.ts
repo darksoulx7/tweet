@@ -5,11 +5,16 @@ import { AuthPayload } from '@auth/interfaces/auth.interface';
 import { IJWT } from './auth.mock';
 import mongoose from 'mongoose';
 
-export const imagesMockRequest = (sessionData: IJWT, body: any, currentUser?: AuthPayload | null, params?: IParams) => ({
+export const imagesMockRequest = (
+  sessionData: IJWT,
+  body: any,
+  currentUser?: AuthPayload | null,
+  params?: IParams,
+) => ({
   session: sessionData,
   body,
   params,
-  currentUser
+  currentUser,
 });
 
 export const imagesMockResponse = (): Response => {
@@ -32,5 +37,5 @@ export const fileDocumentMock: IFileImageDocument = {
   bgImageId: '12345',
   imgVersion: '',
   imgId: '',
-  createdAt: new Date()
+  createdAt: new Date(),
 } as IFileImageDocument;

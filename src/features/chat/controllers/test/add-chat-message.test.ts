@@ -2,7 +2,11 @@ import { Request, Response } from 'express';
 import mongoose from 'mongoose';
 import { Server } from 'socket.io';
 import * as chatServer from '@socket/chat';
-import { chatMessage, chatMockRequest, chatMockResponse } from '@root/mocks/chat.mock';
+import {
+  chatMessage,
+  chatMockRequest,
+  chatMockResponse,
+} from '@root/mocks/chat.mock';
 import { Add } from '@chat/controllers/add-chat-message';
 import { chatQueue } from '@service/queues/chat.queue';
 import { authUserPayload } from '@root/mocks/auth.mock';
@@ -22,8 +26,8 @@ jest.mock('@service/queues/email.queue');
 Object.defineProperties(chatServer, {
   socketIOChatObject: {
     value: new Server(),
-    writable: true
-  }
+    writable: true,
+  },
 });
 
 describe('Add', () => {
@@ -38,9 +42,15 @@ describe('Add', () => {
 
   it('should call socket.io emit twice', async () => {
     jest.spyOn(chatServer.socketIOChatObject, 'emit');
-    const req: Request = chatMockRequest({}, chatMessage, authUserPayload) as Request;
+    const req: Request = chatMockRequest(
+      {},
+      chatMessage,
+      authUserPayload,
+    ) as Request;
     const res: Response = chatMockResponse();
-    jest.spyOn(UserCache.prototype, 'getUserFromCache').mockResolvedValue(existingUser);
+    jest
+      .spyOn(UserCache.prototype, 'getUserFromCache')
+      .mockResolvedValue(existingUser);
 
     await Add.prototype.message(req, res);
     expect(chatServer.socketIOChatObject.emit).toHaveBeenCalledTimes(2);
@@ -48,53 +58,76 @@ describe('Add', () => {
 
   it('should call addEmailJob method', async () => {
     existingUserTwo.notifications.messages = true;
-    const req: Request = chatMockRequest({}, chatMessage, authUserPayload) as Request;
+    const req: Request = chatMockRequest(
+      {},
+      chatMessage,
+      authUserPayload,
+    ) as Request;
     const res: Response = chatMockResponse();
-    jest.spyOn(UserCache.prototype, 'getUserFromCache').mockResolvedValue(existingUserTwo);
+    jest
+      .spyOn(UserCache.prototype, 'getUserFromCache')
+      .mockResolvedValue(existingUserTwo);
     jest.spyOn(emailQueue, 'addEmailJob');
 
     const templateParams = {
       username: existingUserTwo.username!,
       message: chatMessage.body,
-      header: `Message notification from ${req.currentUser!.username}`
+      header: `Message notification from ${req.currentUser!.username}`,
     };
-    const template: string = notificationTemplate.notificationMessageTemplate(templateParams);
+    const template: string =
+      notificationTemplate.notificationMessageTemplate(templateParams);
 
     await Add.prototype.message(req, res);
     expect(emailQueue.addEmailJob).toHaveBeenCalledWith('directMessageEmail', {
       receiverEmail: existingUserTwo.email!,
       template,
-      subject: `You've received messages from ${req.currentUser!.username!}`
+      subject: `You've received messages from ${req.currentUser!.username!}`,
     });
   });
 
   it('should not call addEmailJob method', async () => {
     chatMessage.isRead = true;
-    const req: Request = chatMockRequest({}, chatMessage, authUserPayload) as Request;
+    const req: Request = chatMockRequest(
+      {},
+      chatMessage,
+      authUserPayload,
+    ) as Request;
     const res: Response = chatMockResponse();
     jest.spyOn(emailQueue, 'addEmailJob');
-    jest.spyOn(UserCache.prototype, 'getUserFromCache').mockResolvedValue(existingUser);
+    jest
+      .spyOn(UserCache.prototype, 'getUserFromCache')
+      .mockResolvedValue(existingUser);
 
     const templateParams = {
       username: existingUserTwo.username!,
       message: chatMessage.body,
-      header: `Message Notification from ${req.currentUser!.username}`
+      header: `Message Notification from ${req.currentUser!.username}`,
     };
-    const template: string = notificationTemplate.notificationMessageTemplate(templateParams);
+    const template: string =
+      notificationTemplate.notificationMessageTemplate(templateParams);
 
     await Add.prototype.message(req, res);
-    expect(emailQueue.addEmailJob).not.toHaveBeenCalledWith('directMessageMail', {
-      receiverEmail: req.currentUser!.email,
-      template,
-      subject: `You've received messages from ${existingUserTwo.username!}`
-    });
+    expect(emailQueue.addEmailJob).not.toHaveBeenCalledWith(
+      'directMessageMail',
+      {
+        receiverEmail: req.currentUser!.email,
+        template,
+        subject: `You've received messages from ${existingUserTwo.username!}`,
+      },
+    );
   });
 
   it('should call addChatListToCache twice', async () => {
     jest.spyOn(MessageCache.prototype, 'addChatListToCache');
-    const req: Request = chatMockRequest({}, chatMessage, authUserPayload) as Request;
+    const req: Request = chatMockRequest(
+      {},
+      chatMessage,
+      authUserPayload,
+    ) as Request;
     const res: Response = chatMockResponse();
-    jest.spyOn(UserCache.prototype, 'getUserFromCache').mockResolvedValue(existingUser);
+    jest
+      .spyOn(UserCache.prototype, 'getUserFromCache')
+      .mockResolvedValue(existingUser);
 
     await Add.prototype.message(req, res);
     expect(MessageCache.prototype.addChatListToCache).toHaveBeenCalledTimes(2);
@@ -102,34 +135,56 @@ describe('Add', () => {
 
   it('should call addChatMessageToCache', async () => {
     jest.spyOn(MessageCache.prototype, 'addChatMessageToCache');
-    const req: Request = chatMockRequest({}, chatMessage, authUserPayload) as Request;
+    const req: Request = chatMockRequest(
+      {},
+      chatMessage,
+      authUserPayload,
+    ) as Request;
     const res: Response = chatMockResponse();
-    jest.spyOn(UserCache.prototype, 'getUserFromCache').mockResolvedValue(existingUser);
+    jest
+      .spyOn(UserCache.prototype, 'getUserFromCache')
+      .mockResolvedValue(existingUser);
 
     await Add.prototype.message(req, res);
-    expect(MessageCache.prototype.addChatMessageToCache).toHaveBeenCalledTimes(1);
+    expect(MessageCache.prototype.addChatMessageToCache).toHaveBeenCalledTimes(
+      1,
+    );
   });
 
   it('should call chatQueue addChatJob', async () => {
     jest.spyOn(chatQueue, 'addChatJob');
-    const req: Request = chatMockRequest({}, chatMessage, authUserPayload) as Request;
+    const req: Request = chatMockRequest(
+      {},
+      chatMessage,
+      authUserPayload,
+    ) as Request;
     const res: Response = chatMockResponse();
-    jest.spyOn(UserCache.prototype, 'getUserFromCache').mockResolvedValue(existingUser);
+    jest
+      .spyOn(UserCache.prototype, 'getUserFromCache')
+      .mockResolvedValue(existingUser);
 
     await Add.prototype.message(req, res);
     expect(chatQueue.addChatJob).toHaveBeenCalledTimes(1);
   });
 
   it('should send correct json response', async () => {
-    const req: Request = chatMockRequest({}, chatMessage, authUserPayload) as Request;
+    const req: Request = chatMockRequest(
+      {},
+      chatMessage,
+      authUserPayload,
+    ) as Request;
     const res: Response = chatMockResponse();
-    jest.spyOn(UserCache.prototype, 'getUserFromCache').mockResolvedValue(existingUser);
+    jest
+      .spyOn(UserCache.prototype, 'getUserFromCache')
+      .mockResolvedValue(existingUser);
 
     await Add.prototype.message(req, res);
     expect(res.status).toHaveBeenCalledWith(200);
     expect(res.json).toHaveBeenCalledWith({
       message: 'Message added',
-      conversationId: new mongoose.Types.ObjectId(`${chatMessage.conversationId}`)
+      conversationId: new mongoose.Types.ObjectId(
+        `${chatMessage.conversationId}`,
+      ),
     });
   });
 });

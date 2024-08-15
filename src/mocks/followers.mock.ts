@@ -5,10 +5,14 @@ import { existingUserTwo } from '@root/mocks/user.mock';
 import mongoose from 'mongoose';
 import { IFollowerData } from '@follower/interfaces/follower.interface';
 
-export const followersMockRequest = (sessionData: IJWT, currentUser?: AuthPayload | null, params?: IParams) => ({
+export const followersMockRequest = (
+  sessionData: IJWT,
+  currentUser?: AuthPayload | null,
+  params?: IParams,
+) => ({
   session: sessionData,
   params,
-  currentUser
+  currentUser,
 });
 
 export const followersMockResponse = (): Response => {
@@ -32,7 +36,7 @@ export const mockFollowerData: IFollowerData = {
   postCount: existingUserTwo.postsCount,
   username: `${existingUserTwo.username}`,
   uId: `${existingUserTwo.uId}`,
-  _id: new mongoose.Types.ObjectId(existingUserTwo._id)
+  _id: new mongoose.Types.ObjectId(existingUserTwo._id),
 };
 
 export const followerData = {
@@ -43,7 +47,8 @@ export const followerData = {
     avatarColor: '#ff9800',
     followersCount: 3,
     followingCount: 5,
-    profilePicture: 'https://res.cloudinary.com/ratingapp/image/upload/605727cd646eb50e668a4e13'
+    profilePicture:
+      'https://res.cloudinary.com/ratingapp/image/upload/605727cd646eb50e668a4e13',
   },
   followeeId: {
     username: 'Danny',
@@ -51,6 +56,7 @@ export const followerData = {
     avatarColor: '#ff9800',
     followersCount: 3,
     followingCount: 5,
-    profilePicture: 'https://res.cloudinary.com/ratingapp/image/upload/605727cd646eb50e668a4e13'
-  }
+    profilePicture:
+      'https://res.cloudinary.com/ratingapp/image/upload/605727cd646eb50e668a4e13',
+  },
 };

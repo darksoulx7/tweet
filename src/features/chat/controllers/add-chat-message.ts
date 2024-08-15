@@ -9,7 +9,10 @@ import mongoose from 'mongoose';
 import { UploadApiResponse } from 'cloudinary';
 import { uploads } from '@global/helpers/cloudinary-upload';
 import { BadRequestError } from '@global/helpers/error-handler';
-import { IMessageData, IMessageNotification } from '@chat/interfaces/chat.interface';
+import {
+  IMessageData,
+  IMessageNotification,
+} from '@chat/interfaces/chat.interface';
 import { socketIOChatObject } from '@socket/chat';
 import { INotificationTemplate } from '@notification/interfaces/notification.interface';
 import { notificationTemplate } from '@service/emails/templates/notifications/notification-template';
@@ -32,16 +35,25 @@ export class Add {
       body,
       gifUrl,
       isRead,
-      selectedImage
+      selectedImage,
     } = req.body;
     let fileUrl = '';
     const messageObjectId: ObjectId = new ObjectId();
-    const conversationObjectId: ObjectId = !conversationId ? new ObjectId() : new mongoose.Types.ObjectId(conversationId);
+    const conversationObjectId: ObjectId = !conversationId
+      ? new ObjectId()
+      : new mongoose.Types.ObjectId(conversationId);
 
-    const sender: IUserDocument = (await userCache.getUserFromCache(`${req.currentUser!.userId}`)) as IUserDocument;
+    const sender: IUserDocument = (await userCache.getUserFromCache(
+      `${req.currentUser!.userId}`,
+    )) as IUserDocument;
 
     if (selectedImage.length) {
-      const result: UploadApiResponse = (await uploads(req.body.image, req.currentUser!.userId, true, true)) as UploadApiResponse;
+      const result: UploadApiResponse = (await uploads(
+        req.body.image,
+        req.currentUser!.userId,
+        true,
+        true,
+      )) as UploadApiResponse;
       if (!result?.public_id) {
         throw new BadRequestError(result.message);
       }
@@ -66,7 +78,7 @@ export class Add {
       reaction: [],
       createdAt: new Date(),
       deleteForEveryone: false,
-      deleteForMe: false
+      deleteForMe: false,
     };
     Add.prototype.emitSocketIOEvent(messageData);
 
@@ -76,16 +88,29 @@ export class Add {
         message: body,
         receiverName: receiverUsername,
         receiverId,
-        messageData
+        messageData,
       });
     }
 
-    await messageCache.addChatListToCache(`${req.currentUser!.userId}`, `${receiverId}`, `${conversationObjectId}`);
-    await messageCache.addChatListToCache(`${receiverId}`, `${req.currentUser!.userId}`, `${conversationObjectId}`);
-    await messageCache.addChatMessageToCache(`${conversationObjectId}`, messageData);
+    await messageCache.addChatListToCache(
+      `${req.currentUser!.userId}`,
+      `${receiverId}`,
+      `${conversationObjectId}`,
+    );
+    await messageCache.addChatListToCache(
+      `${receiverId}`,
+      `${req.currentUser!.userId}`,
+      `${conversationObjectId}`,
+    );
+    await messageCache.addChatMessageToCache(
+      `${conversationObjectId}`,
+      messageData,
+    );
     chatQueue.addChatJob('addChatMessageToDB', messageData);
 
-    res.status(HTTP_STATUS.OK).json({ message: 'Message added', conversationId: conversationObjectId });
+    res
+      .status(HTTP_STATUS.OK)
+      .json({ message: 'Message added', conversationId: conversationObjectId });
   }
 
   public async addChatUsers(req: Request, res: Response): Promise<void> {
@@ -105,19 +130,27 @@ export class Add {
     socketIOChatObject.emit('chat list', data);
   }
 
-  private async messageNotification({ currentUser, message, receiverName, receiverId }: IMessageNotification): Promise<void> {
-    const cachedUser: IUserDocument = (await userCache.getUserFromCache(`${receiverId}`)) as IUserDocument;
+  private async messageNotification({
+    currentUser,
+    message,
+    receiverName,
+    receiverId,
+  }: IMessageNotification): Promise<void> {
+    const cachedUser: IUserDocument = (await userCache.getUserFromCache(
+      `${receiverId}`,
+    )) as IUserDocument;
     if (cachedUser.notifications.messages) {
       const templateParams: INotificationTemplate = {
         username: receiverName,
         message,
-        header: `Message notification from ${currentUser.username}`
+        header: `Message notification from ${currentUser.username}`,
       };
-      const template: string = notificationTemplate.notificationMessageTemplate(templateParams);
+      const template: string =
+        notificationTemplate.notificationMessageTemplate(templateParams);
       emailQueue.addEmailJob('directMessageEmail', {
         receiverEmail: cachedUser.email!,
         template,
-        subject: `You've received messages from ${currentUser.username}`
+        subject: `You've received messages from ${currentUser.username}`,
       });
     }
   }

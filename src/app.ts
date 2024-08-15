@@ -4,18 +4,18 @@ import databaseConnection from '@root/setupDatabase';
 import { config } from '@root/config';
 
 class Application {
-    public initialize(): void {
-        this.loadConfig();
-        databaseConnection();
-        const app: Express = express();
-        const server: ChattyServer = new ChattyServer(app);
-        server.start();
-    }
+  public initialize(): void {
+    this.loadConfig();
+    databaseConnection();
+    const app: Express = express();
+    const server: ChattyServer = new ChattyServer(app);
+    server.start();
+  }
 
-    public loadConfig(): void {
-        config.validateConfig();
-        config.cloudinaryConfig();
-    }
+  public loadConfig(): void {
+    config.validateConfig();
+    config.cloudinaryConfig();
+  }
 }
 
 const app: Application = new Application();

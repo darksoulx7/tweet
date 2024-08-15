@@ -7,9 +7,13 @@ const reactionSchema: Schema = new Schema({
   username: { type: String, default: '' },
   avataColor: { type: String, default: '' },
   profilePicture: { type: String, default: '' },
-  createdAt: { type: Date, default: Date.now() }
+  createdAt: { type: Date, default: Date.now() },
 });
 
-const ReactionModel: Model<IReactionDocument> = model<IReactionDocument>('Reaction', reactionSchema, 'Reaction');
+const ReactionModel: Model<IReactionDocument> = model<IReactionDocument>(
+  'Reaction',
+  reactionSchema,
+  'Reaction',
+);
 
 export { ReactionModel };

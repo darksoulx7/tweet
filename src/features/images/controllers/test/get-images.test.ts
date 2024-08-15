@@ -1,6 +1,10 @@
 import { Request, Response } from 'express';
 import { authUserPayload } from '@root/mocks/auth.mock';
-import { fileDocumentMock, imagesMockRequest, imagesMockResponse } from '@root/mocks/image.mock';
+import {
+  fileDocumentMock,
+  imagesMockRequest,
+  imagesMockResponse,
+} from '@root/mocks/image.mock';
 import { Get } from '@image/controllers/get-images';
 import { imageService } from '@service/db/image.service';
 
@@ -17,7 +21,9 @@ describe('Get', () => {
   });
 
   it('should send correct json response', async () => {
-    const req: Request = imagesMockRequest({}, {}, authUserPayload, { imageId: '12345' }) as Request;
+    const req: Request = imagesMockRequest({}, {}, authUserPayload, {
+      imageId: '12345',
+    }) as Request;
     const res: Response = imagesMockResponse();
     jest.spyOn(imageService, 'getImages').mockResolvedValue([fileDocumentMock]);
 
@@ -26,7 +32,7 @@ describe('Get', () => {
     expect(res.status).toHaveBeenCalledWith(200);
     expect(res.json).toHaveBeenCalledWith({
       message: 'User images',
-      images: [fileDocumentMock]
+      images: [fileDocumentMock],
     });
   });
 });

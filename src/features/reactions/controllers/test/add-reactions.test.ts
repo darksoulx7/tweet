@@ -1,6 +1,9 @@
 import { Request, Response } from 'express';
 import { authUserPayload } from '@root/mocks/auth.mock';
-import { reactionMockRequest, reactionMockResponse } from '@root/mocks/reactions.mock';
+import {
+  reactionMockRequest,
+  reactionMockResponse,
+} from '@root/mocks/reactions.mock';
 import { ReactionCache } from '@service/redis/reaction.cache';
 import { reactionQueue } from '@service/queues/reaction.queue';
 import { Add } from '@reaction/controllers/add-reactions';
@@ -34,27 +37,32 @@ describe('AddReaction', () => {
           happy: 0,
           wow: 0,
           sad: 0,
-          angry: 0
-        }
+          angry: 0,
+        },
       },
-      authUserPayload
+      authUserPayload,
     ) as Request;
     const res: Response = reactionMockResponse();
     const spy = jest.spyOn(ReactionCache.prototype, 'savePostReactionToCache');
     const reactionSpy = jest.spyOn(reactionQueue, 'addReactionJob');
 
     await Add.prototype.reaction(req, res);
-    expect(ReactionCache.prototype.savePostReactionToCache).toHaveBeenCalledWith(
+    expect(
+      ReactionCache.prototype.savePostReactionToCache,
+    ).toHaveBeenCalledWith(
       spy.mock.calls[0][0],
       spy.mock.calls[0][1],
       spy.mock.calls[0][2],
       spy.mock.calls[0][3],
-      spy.mock.calls[0][4]
+      spy.mock.calls[0][4],
     );
-    expect(reactionQueue.addReactionJob).toHaveBeenCalledWith(reactionSpy.mock.calls[0][0], reactionSpy.mock.calls[0][1]);
+    expect(reactionQueue.addReactionJob).toHaveBeenCalledWith(
+      reactionSpy.mock.calls[0][0],
+      reactionSpy.mock.calls[0][1],
+    );
     expect(res.status).toHaveBeenCalledWith(200);
     expect(res.json).toHaveBeenCalledWith({
-      message: 'Reaction added successfully'
+      message: 'Reaction added successfully',
     });
   });
 });

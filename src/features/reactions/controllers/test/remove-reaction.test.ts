@@ -1,5 +1,8 @@
 import { Request, Response } from 'express';
-import { reactionMockRequest, reactionMockResponse } from '@root/mocks/reactions.mock';
+import {
+  reactionMockRequest,
+  reactionMockResponse,
+} from '@root/mocks/reactions.mock';
 import { authUserPayload } from '@root/mocks/auth.mock';
 import { ReactionCache } from '@service/redis/reaction.cache';
 import { reactionQueue } from '@service/queues/reaction.queue';
@@ -29,23 +32,28 @@ describe('Remove', () => {
         happy: 0,
         wow: 0,
         sad: 0,
-        angry: 0
-      })
+        angry: 0,
+      }),
     }) as Request;
     const res: Response = reactionMockResponse();
     jest.spyOn(ReactionCache.prototype, 'removePostReactionFromCache');
     const spy = jest.spyOn(reactionQueue, 'addReactionJob');
 
     await Remove.prototype.reaction(req, res);
-    expect(ReactionCache.prototype.removePostReactionFromCache).toHaveBeenCalledWith(
+    expect(
+      ReactionCache.prototype.removePostReactionFromCache,
+    ).toHaveBeenCalledWith(
       '6027f77087c9d9ccb1555268',
       `${req.currentUser?.username}`,
-      JSON.parse(req.params.postReactions)
+      JSON.parse(req.params.postReactions),
     );
-    expect(reactionQueue.addReactionJob).toHaveBeenCalledWith(spy.mock.calls[0][0], spy.mock.calls[0][1]);
+    expect(reactionQueue.addReactionJob).toHaveBeenCalledWith(
+      spy.mock.calls[0][0],
+      spy.mock.calls[0][1],
+    );
     expect(res.status).toHaveBeenCalledWith(200);
     expect(res.json).toHaveBeenCalledWith({
-      message: 'Reaction removed from post'
+      message: 'Reaction removed from post',
     });
   });
 });

@@ -16,8 +16,12 @@ export class SocketIOChatHandler {
     this.io.on('connection', (socket: Socket) => {
       socket.on('join room', (users: ISenderReceiver) => {
         const { senderName, receiverName } = users;
-        const senderSocketId: string = connectedUsersMap.get(senderName) as string;
-        const receiverSocketId: string = connectedUsersMap.get(receiverName) as string;
+        const senderSocketId: string = connectedUsersMap.get(
+          senderName,
+        ) as string;
+        const receiverSocketId: string = connectedUsersMap.get(
+          receiverName,
+        ) as string;
         socket.join(senderSocketId);
         socket.join(receiverSocketId);
       });

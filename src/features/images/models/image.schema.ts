@@ -7,8 +7,12 @@ const imageSchema: Schema = new Schema({
   bgImageId: { type: String, default: '' },
   imgVersion: { type: String, default: '' },
   imgId: { type: String, default: '' },
-  createdAt: { type: Date, default: Date.now, index: true }
+  createdAt: { type: Date, default: Date.now, index: true },
 });
 
-const ImageModel: Model<IFileImageDocument> = model<IFileImageDocument>('Image', imageSchema, 'Image');
+const ImageModel: Model<IFileImageDocument> = model<IFileImageDocument>(
+  'Image',
+  imageSchema,
+  'Image',
+);
 export { ImageModel };

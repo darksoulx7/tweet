@@ -5,13 +5,13 @@ export const mockExistingUser = {
     messages: true,
     reactions: true,
     comments: true,
-    follows: true
+    follows: true,
   },
   social: {
     facebook: '',
     instagram: '',
     twitter: '',
-    youtube: ''
+    youtube: '',
   },
   blocked: [],
   blockedBy: [],
@@ -26,7 +26,7 @@ export const mockExistingUser = {
   school: 'University of Benin',
   location: 'Dusseldorf, Germany',
   quote: 'Sky is my limit',
-  createdAt: new Date()
+  createdAt: new Date(),
 } as unknown as IUserDocument;
 
 export const existingUser = {
@@ -34,13 +34,13 @@ export const existingUser = {
     messages: true,
     reactions: true,
     comments: true,
-    follows: true
+    follows: true,
   },
   social: {
     facebook: '',
     instagram: '',
     twitter: '',
-    youtube: ''
+    youtube: '',
   },
   blocked: [],
   blockedBy: [],
@@ -59,7 +59,7 @@ export const existingUser = {
   school: 'University of Benin',
   location: 'Dusseldorf, Germany',
   quote: 'Sky is my limit',
-  createdAt: new Date()
+  createdAt: new Date(),
 } as unknown as IUserDocument;
 
 export const existingUserTwo = {
@@ -67,13 +67,13 @@ export const existingUserTwo = {
     messages: false,
     reactions: true,
     comments: true,
-    follows: false
+    follows: false,
   },
   social: {
     facebook: '',
     instagram: '',
     twitter: '',
-    youtube: ''
+    youtube: '',
   },
   blocked: [],
   blockedBy: [],
@@ -92,7 +92,7 @@ export const existingUserTwo = {
   school: 'University of Benin',
   location: 'Dusseldorf, Germany',
   quote: 'Sky is my limit',
-  createdAt: new Date()
+  createdAt: new Date(),
 } as unknown as IUserDocument;
 
 export const mergedAuthAndUserData = {
@@ -100,13 +100,13 @@ export const mergedAuthAndUserData = {
     messages: false,
     reactions: true,
     comments: true,
-    follows: false
+    follows: false,
   },
   social: {
     facebook: '',
     instagram: '',
     twitter: '',
-    youtube: ''
+    youtube: '',
   },
   blocked: [],
   blockedBy: [],
@@ -126,7 +126,7 @@ export const mergedAuthAndUserData = {
   school: 'University of Benin',
   location: 'Dusseldorf, Germany',
   quote: 'Sky is my limit',
-  createdAt: '2022-08-31T07:42:24.451Z'
+  createdAt: '2022-08-31T07:42:24.451Z',
 } as unknown as IUserDocument;
 
 export const searchedUserMock = {
@@ -135,7 +135,7 @@ export const searchedUserMock = {
   uId: '1621613119252062',
   username: 'Kenny',
   email: 'ken@me.com',
-  avatarColor: '#9c27b1'
+  avatarColor: '#9c27b1',
 };
 
 export const userJwt =

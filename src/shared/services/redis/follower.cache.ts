@@ -29,7 +29,10 @@ export class FollowerCache extends BaseCache {
     }
   }
 
-  public async removeFollowerFromCache(key: string, value: string): Promise<void> {
+  public async removeFollowerFromCache(
+    key: string,
+    value: string,
+  ): Promise<void> {
     try {
       if (!this.client.isOpen) {
         await this.client.connect();
@@ -41,7 +44,11 @@ export class FollowerCache extends BaseCache {
     }
   }
 
-  public async updateFollowersCountInCache(userId: string, prop: string, value: number): Promise<void> {
+  public async updateFollowersCountInCache(
+    userId: string,
+    prop: string,
+    value: number,
+  ): Promise<void> {
     try {
       if (!this.client.isOpen) {
         await this.client.connect();
@@ -61,7 +68,9 @@ export class FollowerCache extends BaseCache {
       const response: string[] = await this.client.LRANGE(key, 0, -1);
       const list: IFollowerData[] = [];
       for (const item of response) {
-        const user: IUserDocument = (await userCache.getUserFromCache(item)) as IUserDocument;
+        const user: IUserDocument = (await userCache.getUserFromCache(
+          item,
+        )) as IUserDocument;
         const data: IFollowerData = {
           _id: new mongoose.Types.ObjectId(user._id),
           username: user.username!,
@@ -71,7 +80,7 @@ export class FollowerCache extends BaseCache {
           followingCount: user.followingCount,
           profilePicture: user.profilePicture,
           uId: user.uId!,
-          userProfile: user
+          userProfile: user,
         };
         list.push(data);
       }
@@ -82,13 +91,21 @@ export class FollowerCache extends BaseCache {
     }
   }
 
-  public async updateBlockedUserPropInCache(key: string, prop: string, value: string, type: 'block' | 'unblock'): Promise<void> {
+  public async updateBlockedUserPropInCache(
+    key: string,
+    prop: string,
+    value: string,
+    type: 'block' | 'unblock',
+  ): Promise<void> {
     try {
       if (!this.client.isOpen) {
         await this.client.connect();
       }
 
-      const response: string = (await this.client.HGET(`users:${key}`, prop)) as string;
+      const response: string = (await this.client.HGET(
+        `users:${key}`,
+        prop,
+      )) as string;
       const multi: ReturnType<typeof this.client.multi> = this.client.multi();
       let blocked: string[] = Helpers.parseJson(response) as string[];
       if (type === 'block') {
