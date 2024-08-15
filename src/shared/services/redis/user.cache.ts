@@ -181,7 +181,7 @@ export class UserCache extends BaseCache {
             }
 
             const response: IUserDocument = (await this.client.HGETALL(
-                `users:${userId}`,
+                `usersf:${userId}`,
             )) as unknown as IUserDocument;
             response.createdAt = new Date(
                 Helpers.parseJson(`${response.createdAt}`),
