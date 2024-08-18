@@ -2,6 +2,18 @@ import { IReactions } from '@root/features/reactions/interfaces/reaction.interfa
 import { ObjectId } from 'mongodb';
 import mongoose, { Document } from 'mongoose';
 
+export interface IReactionDocument extends Document {
+  _id?: string | ObjectId;
+  username: string;
+  avataColor: string;
+  type: string;
+  postId: string;
+  profilePicture: string;
+  createdAt?: Date;
+  userTo?: string | ObjectId;
+  comment?: string;
+}
+
 export interface IPostDocument extends Document {
   _id?: string | mongoose.Types.ObjectId;
   userId: string;
