@@ -1,4 +1,4 @@
-@baseUrl = http://localhost:5000
+@baseUrl = http://localhost:9090
 @urlPath = api/v1
 
 ###
@@ -34,8 +34,8 @@ Accept: application/json
 withCredentials: true
 
 {
-  "username": "",
-  "password": ""
+  "username": "Sukuna01",
+  "password": "abc123"
 }
 
 ###
