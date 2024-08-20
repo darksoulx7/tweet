@@ -2,14 +2,14 @@
 @urlPath = api/v1
 
 ###
-GET {{baseUrl}}/{{urlPath}}/post/all/<page-number>
+GET {{baseUrl}}/{{urlPath}}/post/all/1
 # GET {{baseUrl}}/{{urlPath}}/post/all/1
 Content-Type: application/json
 Accept: application/json
 withCredentials: true
 
 ###
-GET {{baseUrl}}/{{urlPath}}/post/images/<page-number>
+GET {{baseUrl}}/{{urlPath}}/post/images/1
 # GET {{baseUrl}}/{{urlPath}}/post/images/1
 Content-Type: application/json
 Accept: application/json
@@ -25,12 +25,12 @@ withCredentials: true
 # Feelings - like | love | wow | happy | sad | angry
 
 {
-  "post": "",
-  "bgColor": "<any-hex-color-code>",
+  "post": "6 post",
+  "bgColor": "#123456",
   "privacy": "Public",
   "gifUrl": "",
-  "profilePicture": "<cloudinary-user-profile-picture-url>",
-  "feelings": ""
+  "profilePicture": "https://res.cloudinary.com/dyjgikbog/image/upload/v1724149982/66c470dd89c67d47b5a9e3b7",
+  "feelings": "sad"
 }
 
 ###
