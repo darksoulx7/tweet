@@ -173,22 +173,16 @@ export class PostCache extends BaseCache {
     }
   }
 
-  public async getPostsWithVideosFromCache(
-    key: string,
-    start: number,
-    end: number,
-  ): Promise<IPostDocument[]> {
+  public async getPostsWithVideosFromCache(key: string, start: number, end: number): Promise<IPostDocument[]> {
     try {
       if (!this.client.isOpen) {
         await this.client.connect();
       }
 
-      const reply: string[] = await this.client.ZRANGE(key, start, end, {
-        REV: true,
-      });
+      const reply: string[] = await this.client.ZRANGE(key, start, end);
       const multi: ReturnType<typeof this.client.multi> = this.client.multi();
-      for (const value of reply) {
-        multi.HGETALL(`posts:${value}`);
+      for (let i = reply.length - 1; i >= 0; i--) {
+        multi.HGETALL(`posts:${reply[i]}`);
       }
       const replies: PostCacheMultiType =
         (await multi.exec()) as PostCacheMultiType;
@@ -218,11 +212,16 @@ export class PostCache extends BaseCache {
         await this.client.connect();
       }
 
-      const reply: string[] = await this.client.ZRANGE(key, uId, uId, { REV: true ,BY: 'SCORE' });
+      // const reply: string[] = await this.client.ZRANGE(key, uId, uId, { REV: true ,BY: 'SCORE' });
+      const reply: string[] = await this.client.ZRANGE(key, uId, uId, { BY: 'SCORE' });
       const multi: ReturnType<typeof this.client.multi> = this.client.multi();
-      for (const value of reply) {
-        multi.HGETALL(`posts:${value}`);
+      // for (const value of reply) {
+      //   multi.HGETALL(`posts:${value}`);
+      // }
+      for (let i = reply.length - 1; i >= 0; i--) {
+        multi.HGETALL(`posts:${reply[i]}`);
       }
+
       const replies: PostCacheMultiType = (await multi.exec()) as PostCacheMultiType;
       const postReplies: IPostDocument[] = [];
 
@@ -252,23 +251,18 @@ export class PostCache extends BaseCache {
     }
   }
 
-  public async deletePostFromCache(
-    key: string,
-    currentUserId: string,
-  ): Promise<void> {
+  public async deletePostFromCache(key: string, currentUserId: string): Promise<void> {
     try {
       if (!this.client.isOpen) {
         await this.client.connect();
       }
-      const postCount: string[] = await this.client.HMGET(
-        `users:${currentUserId}`,
-        'postsCount',
-      );
+      const postCount: string[] = await this.client.HMGET(`users:${currentUserId}`, 'postsCount');
       const multi: ReturnType<typeof this.client.multi> = this.client.multi();
+
       multi.ZREM('post', `${key}`);
       multi.DEL(`posts:${key}`);
-      multi.DEL(`comments:${key}`);
-      multi.DEL(`reactions:${key}`);
+      // multi.DEL(`comments:${key}`);
+      // multi.DEL(`reactions:${key}`);
       const count: number = parseInt(postCount[0], 10) - 1;
       multi.HSET(`users:${currentUserId}`, 'postsCount', count);
       await multi.exec();
@@ -282,18 +276,7 @@ export class PostCache extends BaseCache {
     key: string,
     updatedPost: IPostDocument,
   ): Promise<IPostDocument> {
-    const {
-      post,
-      bgColor,
-      feelings,
-      privacy,
-      gifUrl,
-      imgVersion,
-      imgId,
-      videoId,
-      videoVersion,
-      profilePicture,
-    } = updatedPost;
+    const { post, bgColor, feelings, privacy, gifUrl, imgVersion, imgId, videoId, videoVersion, profilePicture } = updatedPost;
     const dataToSave = {
       post: `${post}`,
       bgColor: `${bgColor}`,
@@ -314,20 +297,15 @@ export class PostCache extends BaseCache {
       for (const [itemKey, itemValue] of Object.entries(dataToSave)) {
         await this.client.HSET(`posts:${key}`, `${itemKey}`, `${itemValue}`);
       }
+
       const multi: ReturnType<typeof this.client.multi> = this.client.multi();
       multi.HGETALL(`posts:${key}`);
-      const reply: PostCacheMultiType =
-        (await multi.exec()) as PostCacheMultiType;
+      const reply: PostCacheMultiType = (await multi.exec()) as PostCacheMultiType;
       const postReply = reply as IPostDocument[];
-      postReply[0].commentsCount = Helpers.parseJson(
-        `${postReply[0].commentsCount}`,
-      ) as number;
-      postReply[0].reactions = Helpers.parseJson(
-        `${postReply[0].reactions}`,
-      ) as IReactions;
-      postReply[0].createdAt = new Date(
-        Helpers.parseJson(`${postReply[0].createdAt}`),
-      ) as Date;
+
+      postReply[0].commentsCount = Helpers.parseJson(`${postReply[0].commentsCount}`) as number;
+      postReply[0].reactions = Helpers.parseJson(`${postReply[0].reactions}`) as IReactions;
+      postReply[0].createdAt = new Date(Helpers.parseJson(`${postReply[0].createdAt}`)) as Date;
 
       return postReply[0];
     } catch (error) {

@@ -83,7 +83,7 @@ withCredentials: true,
 }
 
 ###
-DELETE {{baseUrl}}/{{urlPath}}/post/<postId>
+DELETE {{baseUrl}}/{{urlPath}}/post/66c4737c89c67d47b5a9e3c7
 Content-Type: application/json
 Accept: application/json
 withCredentials: true

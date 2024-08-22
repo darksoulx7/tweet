@@ -41,9 +41,9 @@ export abstract class BaseQueue {
   queue: QueueMQ;
   log: Logger;
 
-  constructor(queueName: string) {
-    this.queue = new QueueMQ(queueName, {
-      connection: { port: 6379, password: '', host: 'localhost' },
+  constructor(queueName: string, queueInstance?: QueueMQ) {
+    this.queue = queueInstance || new QueueMQ(queueName, {
+      connection: { port: 6379, password: '', host: 'localhost' }, // or redisConnection
     });
     bullAdapters.push(new BullMQAdapter(this.queue));
     bullAdapters = [...new Set(bullAdapters)];
@@ -75,12 +75,18 @@ export abstract class BaseQueue {
       attempts: 3,
       backoff: { type: 'fixed', delay: 5000 },
     });
+    this.log.info(`Job ${name} added successfully.`);
   }
 
   protected processJob(name: string, concurrency: number, callback: any): void {
     const worker = new Worker(
       this.queue.name,
       async (job: Job<IBaseJobData>) => {
+      
+      if (job.name !== name) {
+        this.log.error(`Worker received a job (${job.name}) that doesn't match its intended job (${name}). Skipping job.`);
+        return;
+      }
         try {
           await callback(job);
           this.log.info(
@@ -101,17 +107,8 @@ export abstract class BaseQueue {
 
     worker.on('failed', (job: Job | undefined, error: Error) => {
       this.log.info(
-        `${name} - worker job ${job?.id} failed with error ${error.message}`,
+        `${name} - worker job ${job?.id} failed with error ${error.message}`
       );
     });
-
-    worker.on(
-      'progress',
-      (job: Job<IBaseJobData>, progress: number | object) => {
-        this.log.info(
-          `${name} - worker job ${job.id} is ${progress}% complete`,
-        );
-      },
-    );
   }
 }
