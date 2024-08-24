@@ -10,7 +10,7 @@ import {
 } from '@root/mocks/chat.mock';
 import { existingUser } from '@root/mocks/user.mock';
 import { MessageCache } from '@service/redis/message.cache';
-import { chatQueue } from '@service/queues/chat.queue';
+import { markMessageAsDeletedQueue } from '@service/queues/chat.queue';
 import { messageDataMock } from '@root/mocks/chat.mock';
 import mongoose from 'mongoose';
 
@@ -48,7 +48,7 @@ describe('Delete', () => {
         .spyOn(MessageCache.prototype, 'markMessageAsDeleted')
         .mockResolvedValue(messageDataMock);
       jest.spyOn(chatServer.socketIOChatObject, 'emit');
-      jest.spyOn(chatQueue, 'addChatJob');
+      jest.spyOn(markMessageAsDeletedQueue, 'addChatJob');
 
       await Delete.prototype.markMessageAsDeleted(req, res);
       expect(chatServer.socketIOChatObject.emit).toHaveBeenCalledTimes(2);
@@ -60,7 +60,7 @@ describe('Delete', () => {
         'chat list',
         messageDataMock,
       );
-      expect(chatQueue.addChatJob).toHaveBeenCalledWith(
+      expect(markMessageAsDeletedQueue.addChatJob).toHaveBeenCalledWith(
         'markMessageAsDeletedInDB',
         {
           messageId: new mongoose.Types.ObjectId(mockMessageId),
@@ -85,7 +85,7 @@ describe('Delete', () => {
         .spyOn(MessageCache.prototype, 'markMessageAsDeleted')
         .mockResolvedValue(messageDataMock);
       jest.spyOn(chatServer.socketIOChatObject, 'emit');
-      jest.spyOn(chatQueue, 'addChatJob');
+      jest.spyOn(markMessageAsDeletedQueue, 'addChatJob');
 
       await Delete.prototype.markMessageAsDeleted(req, res);
       expect(chatServer.socketIOChatObject.emit).toHaveBeenCalledTimes(2);
@@ -97,7 +97,7 @@ describe('Delete', () => {
         'chat list',
         messageDataMock,
       );
-      expect(chatQueue.addChatJob).toHaveBeenCalledWith(
+      expect(markMessageAsDeletedQueue.addChatJob).toHaveBeenCalledWith(
         'markMessageAsDeletedInDB',
         {
           messageId: new mongoose.Types.ObjectId(mockMessageId),

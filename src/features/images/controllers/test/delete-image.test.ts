@@ -7,7 +7,7 @@ import {
   imagesMockRequest,
   imagesMockResponse,
 } from '@root/mocks/image.mock';
-import { imageQueue } from '@service/queues/image.queue';
+import { removeImageQueue } from '@service/queues/image.queue';
 import { Delete } from '@image/controllers/delete-image';
 import { imageService } from '@service/db/image.service';
 import { UserCache } from '@service/redis/user.cache';
@@ -39,14 +39,14 @@ describe('Delete', () => {
     }) as Request;
     const res: Response = imagesMockResponse();
     jest.spyOn(imageServer.socketIOImageObject, 'emit');
-    jest.spyOn(imageQueue, 'addImageJob');
+    jest.spyOn(removeImageQueue, 'addImageJob');
 
     await Delete.prototype.image(req, res);
     expect(imageServer.socketIOImageObject.emit).toHaveBeenCalledWith(
       'delete image',
       req.params.imageId,
     );
-    expect(imageQueue.addImageJob).toHaveBeenCalledWith('removeImageFromDB', {
+    expect(removeImageQueue.addImageJob).toHaveBeenCalledWith('removeImageFromDB', {
       imageId: req.params.imageId,
     });
     expect(res.status).toHaveBeenCalledWith(200);
@@ -61,7 +61,7 @@ describe('Delete', () => {
     }) as Request;
     const res: Response = imagesMockResponse();
     jest.spyOn(imageServer.socketIOImageObject, 'emit');
-    jest.spyOn(imageQueue, 'addImageJob');
+    jest.spyOn(removeImageQueue, 'addImageJob');
     jest
       .spyOn(imageService, 'getImageByBackgroundId')
       .mockResolvedValue(fileDocumentMock);
@@ -72,7 +72,7 @@ describe('Delete', () => {
       'delete image',
       req.params.imageId,
     );
-    expect(imageQueue.addImageJob).toHaveBeenCalledWith('removeImageFromDB', {
+    expect(removeImageQueue.addImageJob).toHaveBeenCalledWith('removeImageFromDB', {
       imageId: req.params.imageId,
     });
     expect(

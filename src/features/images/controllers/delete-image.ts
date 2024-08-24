@@ -3,7 +3,7 @@ import HTTP_STATUS from 'http-status-codes';
 import { UserCache } from '@service/redis/user.cache';
 import { IUserDocument } from '@user/interfaces/user.interface';
 import { socketIOImageObject } from '@socket/image';
-import { imageQueue } from '@service/queues/image.queue';
+import { removeImageQueue } from '@service/queues/image.queue';
 import { IFileImageDocument } from '@image/interfaces/image.interface';
 import { imageService } from '@service/db/image.service';
 
@@ -13,7 +13,7 @@ export class Delete {
   public async image(req: Request, res: Response): Promise<void> {
     const { imageId } = req.params;
     socketIOImageObject.emit('delete image', imageId);
-    imageQueue.addImageJob('removeImageFromDB', {
+    removeImageQueue.addImageJob('removeImageFromDB', {
       imageId,
     });
     res.status(HTTP_STATUS.OK).json({ message: 'Image deleted successfully' });
@@ -40,7 +40,7 @@ export class Delete {
       IUserDocument,
       IUserDocument,
     ];
-    imageQueue.addImageJob('removeImageFromDB', {
+    removeImageQueue.addImageJob('removeImageFromDB', {
       imageId: image?._id,
     });
     res.status(HTTP_STATUS.OK).json({ message: 'Image deleted successfully' });

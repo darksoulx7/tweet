@@ -8,7 +8,7 @@ import {
   mockMessageId,
 } from '@root/mocks/chat.mock';
 import { MessageCache } from '@service/redis/message.cache';
-import { chatQueue } from '@service/queues/chat.queue';
+import { updateMessageReactionQueue } from '@service/queues/chat.queue';
 import { messageDataMock } from '@root/mocks/chat.mock';
 import { Message } from '@chat/controllers/add-message-reaction';
 
@@ -70,7 +70,7 @@ describe('Message', () => {
       });
     });
 
-    it('should call chatQueue addChatJob', async () => {
+    it('should call addchat Queue addChatJob', async () => {
       const req: Request = chatMockRequest(
         {},
         {
@@ -82,10 +82,10 @@ describe('Message', () => {
         authUserPayload,
       ) as Request;
       const res: Response = chatMockResponse();
-      jest.spyOn(chatQueue, 'addChatJob');
+      jest.spyOn(updateMessageReactionQueue, 'addChatJob');
 
       await Message.prototype.reaction(req, res);
-      expect(chatQueue.addChatJob).toHaveBeenCalledWith(
+      expect(updateMessageReactionQueue.addChatJob).toHaveBeenCalledWith(
         'updateMessageReaction',
         {
           messageId: mockMessageId,

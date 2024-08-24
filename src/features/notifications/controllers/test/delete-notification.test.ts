@@ -6,7 +6,7 @@ import {
   notificationMockRequest,
   notificationMockResponse,
 } from '@root/mocks/notification.mock';
-import { notificationQueue } from '@service/queues/notification.queue';
+import { deleteNotificationQueue } from '@service/queues/notification.queue';
 import { Delete } from '@notification/controllers/delete-notification';
 
 jest.useFakeTimers();
@@ -35,13 +35,13 @@ describe('Delete', () => {
     }) as Request;
     const res: Response = notificationMockResponse();
     jest.spyOn(notificationServer.socketIONotificationObject, 'emit');
-    jest.spyOn(notificationQueue, 'addNotificationJob');
+    jest.spyOn(deleteNotificationQueue, 'addNotificationJob');
 
     await Delete.prototype.notification(req, res);
     expect(
       notificationServer.socketIONotificationObject.emit,
     ).toHaveBeenCalledWith('delete notification', req.params.notificationId);
-    expect(notificationQueue.addNotificationJob).toHaveBeenCalledWith(
+    expect(deleteNotificationQueue.addNotificationJob).toHaveBeenCalledWith(
       'deleteNotification',
       { key: req.params.notificationId },
     );

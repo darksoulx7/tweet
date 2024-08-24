@@ -8,7 +8,7 @@ import {
   IReactionJob,
 } from '@reaction/interfaces/reaction.interface';
 import { ReactionCache } from '@service/redis/reaction.cache';
-import { reactionQueue } from '@service/queues/reaction.queue';
+import { addReactionQueue } from '@service/queues/reaction.queue';
 
 const reactionCache: ReactionCache = new ReactionCache();
 
@@ -49,7 +49,7 @@ export class Add {
       previousReaction,
       reactionObject,
     };
-    reactionQueue.addReactionJob('addReactionToDB', databaseReactionData);
+    addReactionQueue.addReactionJob('addReactionToDB', databaseReactionData);
     res.status(HTTP_STATUS.OK).json({ message: 'Reaction added successfully' });
   }
 }

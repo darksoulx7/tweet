@@ -8,7 +8,7 @@ import { UploadApiResponse } from 'cloudinary';
 import { BadRequestError } from '@global/helpers/error-handler';
 import { IUserDocument } from '@user/interfaces/user.interface';
 import { socketIOImageObject } from '@socket/image';
-import { imageQueue } from '@service/queues/image.queue';
+import { addImageQueue } from '@service/queues/image.queue';
 import { IBgUploadResponse } from '@image/interfaces/image.interface';
 import { Helpers } from '@global/helpers/helpers';
 
@@ -34,7 +34,7 @@ export class Add {
         url,
       )) as IUserDocument;
     socketIOImageObject.emit('update user', cachedUser);
-    imageQueue.addImageJob('addUserProfileImageToDB', {
+    addImageQueue.addImageJob('addUserProfileImageToDB', {
       key: `${req.currentUser!.userId}`,
       value: url,
       imgId: result.public_id,
@@ -68,7 +68,7 @@ export class Add {
       bgImageVersion: version,
       userId: response[0],
     });
-    imageQueue.addImageJob('updateBGImageInDB', {
+    addImageQueue.addImageJob('updateBGImageInDB', {
       key: `${req.currentUser!.userId}`,
       imgId: publicId,
       imgVersion: version.toString(),

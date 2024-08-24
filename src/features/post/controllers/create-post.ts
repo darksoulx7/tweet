@@ -15,7 +15,7 @@ import { addPostQueue } from '@service/queues/post.queue';
 import { UploadApiResponse } from 'cloudinary';
 import { uploads, videoUpload } from '@global/helpers/cloudinary-upload';
 import { BadRequestError } from '@global/helpers/error-handler';
-// import { imageQueue } from '@service/queues/image.queue';
+import { addImageQueue } from '@service/queues/image.queue';
 
 const postCache: PostCache = new PostCache();
 
@@ -103,7 +103,7 @@ export class Create {
       key: req.currentUser!.userId,
       value: createdPost,
     });
-    // imageQueue.addImageJob('addImageToDB', {
+    // imageQueue.addImageJob('addImageQueue', {
     //   key: `${req.currentUser!.userId}`,
     //   imgId: result.public_id,
     //   imgVersion: result.version.toString(),

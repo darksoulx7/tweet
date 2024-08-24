@@ -6,7 +6,7 @@ import {
   notificationMockRequest,
   notificationMockResponse,
 } from '@root/mocks/notification.mock';
-import { notificationQueue } from '@service/queues/notification.queue';
+import { updateNotificationQueue } from '@service/queues/notification.queue';
 import { Update } from '@notification/controllers/update-notification';
 
 jest.useFakeTimers();
@@ -35,13 +35,13 @@ describe('Update', () => {
     }) as Request;
     const res: Response = notificationMockResponse();
     jest.spyOn(notificationServer.socketIONotificationObject, 'emit');
-    jest.spyOn(notificationQueue, 'addNotificationJob');
+    jest.spyOn(updateNotificationQueue, 'addNotificationJob');
 
     await Update.prototype.notification(req, res);
     expect(
       notificationServer.socketIONotificationObject.emit,
     ).toHaveBeenCalledWith('update notification', req.params.notificationId);
-    expect(notificationQueue.addNotificationJob).toHaveBeenCalledWith(
+    expect(updateNotificationQueue.addNotificationJob).toHaveBeenCalledWith(
       'updateNotification',
       { key: req.params.notificationId },
     );

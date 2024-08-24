@@ -1,7 +1,7 @@
 import { Request, Response } from 'express';
 import HTTP_STATUS from 'http-status-codes';
 import { FollowerCache } from '@service/redis/follower.cache';
-import { followerQueue } from '@service/queues/follower.queue';
+import { removeFollowerQueue } from '@service/queues/follower.queue';
 
 const followerCache: FollowerCache = new FollowerCache();
 
@@ -38,7 +38,7 @@ export class Remove {
       followeeCount,
     ]);
 
-    followerQueue.addFollowerJob('removeFollowerFromDB', {
+    removeFollowerQueue.addFollowerJob('removeFollowerFromDB', {
       keyOne: `${followeeId}`,
       keyTwo: `${followerId}`,
     });

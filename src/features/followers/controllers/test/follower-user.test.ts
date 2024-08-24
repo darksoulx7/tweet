@@ -7,7 +7,7 @@ import {
   followersMockResponse,
 } from '@root/mocks/followers.mock';
 import { existingUser } from '@root/mocks/user.mock';
-import { followerQueue } from '@service/queues/follower.queue';
+import { addFollowerQueue } from '@service/queues/follower.queue';
 import { Add } from '@follower/controllers/follower-user';
 import { UserCache } from '@service/redis/user.cache';
 import { FollowerCache } from '@service/redis/follower.cache';
@@ -91,18 +91,18 @@ describe('Add', () => {
       });
     });
 
-    it('should call followerQueue addFollowerJob', async () => {
+    it('should call addFollowerQueue addFollowerJob', async () => {
       const req: Request = followersMockRequest({}, authUserPayload, {
         followerId: '6064861bc25eaa5a5d2f9bf4',
       }) as Request;
       const res: Response = followersMockResponse();
-      const spy = jest.spyOn(followerQueue, 'addFollowerJob');
+      const spy = jest.spyOn(addFollowerQueue, 'addFollowerJob');
       jest
         .spyOn(UserCache.prototype, 'getUserFromCache')
         .mockResolvedValue(existingUser);
 
       await Add.prototype.follower(req, res);
-      expect(followerQueue.addFollowerJob).toHaveBeenCalledWith(
+      expect(addFollowerQueue.addFollowerJob).toHaveBeenCalledWith(
         'addFollowerToDB',
         {
           keyOne: `${req.currentUser?.userId}`,

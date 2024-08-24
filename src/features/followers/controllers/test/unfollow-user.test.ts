@@ -5,7 +5,7 @@ import {
   followersMockResponse,
 } from '@root/mocks/followers.mock';
 import { existingUser } from '@root/mocks/user.mock';
-import { followerQueue } from '@service/queues/follower.queue';
+import { removeFollowerQueue } from '@service/queues/follower.queue';
 import { FollowerCache } from '@service/redis/follower.cache';
 import { Remove } from '@follower/controllers/unfollow-user';
 
@@ -31,7 +31,7 @@ describe('Remove', () => {
     const res: Response = followersMockResponse();
     jest.spyOn(FollowerCache.prototype, 'removeFollowerFromCache');
     jest.spyOn(FollowerCache.prototype, 'updateFollowersCountInCache');
-    jest.spyOn(followerQueue, 'addFollowerJob');
+    jest.spyOn(removeFollowerQueue, 'addFollowerJob');
 
     await Remove.prototype.follower(req, res);
     expect(
@@ -58,7 +58,7 @@ describe('Remove', () => {
     expect(
       FollowerCache.prototype.updateFollowersCountInCache,
     ).toHaveBeenCalledWith(`${req.params.followerId}`, 'followingCount', -1);
-    expect(followerQueue.addFollowerJob).toHaveBeenCalledWith(
+    expect(removeFollowerQueue.addFollowerJob).toHaveBeenCalledWith(
       'removeFollowerFromDB',
       {
         keyOne: `${req.params.followeeId}`,

@@ -8,7 +8,7 @@ import {
   ICommentJob,
 } from '@comment/interfaces/comment.interface';
 import { CommentCache } from '@service/redis/comment.cache';
-import { commentQueue } from '@service/queues/comment.queue';
+import { addCommentQueue } from '@service/queues/comment.queue';
 
 const commentCache: CommentCache = new CommentCache();
 
@@ -38,7 +38,7 @@ export class Add {
       username: req.currentUser!.username,
       comment: commentData,
     };
-    commentQueue.addCommentJob('addCommentToDB', databaseCommentData);
+    addCommentQueue.addCommentJob('addCommentToDB', databaseCommentData);
     res
       .status(HTTP_STATUS.OK)
       .json({ message: 'Comment created successfully' });

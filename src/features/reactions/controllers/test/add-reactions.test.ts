@@ -5,7 +5,7 @@ import {
   reactionMockResponse,
 } from '@root/mocks/reactions.mock';
 import { ReactionCache } from '@service/redis/reaction.cache';
-import { reactionQueue } from '@service/queues/reaction.queue';
+import { addReactionQueue } from '@service/queues/reaction.queue';
 import { Add } from '@reaction/controllers/add-reactions';
 
 jest.useFakeTimers();
@@ -44,7 +44,7 @@ describe('AddReaction', () => {
     ) as Request;
     const res: Response = reactionMockResponse();
     const spy = jest.spyOn(ReactionCache.prototype, 'savePostReactionToCache');
-    const reactionSpy = jest.spyOn(reactionQueue, 'addReactionJob');
+    const reactionSpy = jest.spyOn(addReactionQueue, 'addReactionJob');
 
     await Add.prototype.reaction(req, res);
     expect(
@@ -56,7 +56,7 @@ describe('AddReaction', () => {
       spy.mock.calls[0][3],
       spy.mock.calls[0][4],
     );
-    expect(reactionQueue.addReactionJob).toHaveBeenCalledWith(
+    expect(addReactionQueue.addReactionJob).toHaveBeenCalledWith(
       reactionSpy.mock.calls[0][0],
       reactionSpy.mock.calls[0][1],
     );

@@ -8,7 +8,7 @@ import { CustomError } from '@global/helpers/error-handler';
 import { authUserPayload } from '@root/mocks/auth.mock';
 import { UserCache } from '@service/redis/user.cache';
 import { existingUser } from '@root/mocks/user.mock';
-import { imageQueue } from '@service/queues/image.queue';
+import { addImageQueue } from '@service/queues/image.queue';
 import * as cloudinaryUploads from '@global/helpers/cloudinary-upload';
 
 jest.useFakeTimers();
@@ -111,10 +111,10 @@ describe('Add', () => {
         .mockImplementation((): any =>
           Promise.resolve({ version: '1234', public_id: '123456' }),
         );
-      jest.spyOn(imageQueue, 'addImageJob');
+      jest.spyOn(addImageQueue, 'addImageJob');
 
       await Add.prototype.profileImage(req, res);
-      expect(imageQueue.addImageJob).toHaveBeenCalledWith(
+      expect(addImageQueue.addImageJob).toHaveBeenCalledWith(
         'addUserProfileImageToDB',
         {
           key: `${req.currentUser?.userId}`,
@@ -256,10 +256,10 @@ describe('Add', () => {
         .mockImplementation((): any =>
           Promise.resolve({ version: '1234', public_id: '123456' }),
         );
-      jest.spyOn(imageQueue, 'addImageJob');
+      jest.spyOn(addImageQueue, 'addImageJob');
 
       await Add.prototype.backgroundImage(req, res);
-      expect(imageQueue.addImageJob).toHaveBeenCalledWith('updateBGImageInDB', {
+      expect(addImageQueue.addImageJob).toHaveBeenCalledWith('updateBGImageInDB', {
         key: `${req.currentUser?.userId}`,
         imgId: '123456',
         imgVersion: '1234',

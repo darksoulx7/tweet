@@ -7,7 +7,7 @@ import { IUserDocument } from '@user/interfaces/user.interface';
 import { IFollowerData } from '@follower/interfaces/follower.interface';
 import mongoose from 'mongoose';
 import { socketIOFollowerObject } from '@socket/follower';
-import { followerQueue } from '@service/queues/follower.queue';
+import { addFollowerQueue } from '@service/queues/follower.queue';
 
 const followerCache: FollowerCache = new FollowerCache();
 const userCache: UserCache = new UserCache();
@@ -55,7 +55,7 @@ export class Add {
     );
     await Promise.all([addFollowerToCache, addFolloweeToCache]);
 
-    followerQueue.addFollowerJob('addFollowerToDB', {
+    addFollowerQueue.addFollowerJob('addFollowerToDB', {
       keyOne: `${req.currentUser!.userId}`,
       keyTwo: `${followerId}`,
       username: req.currentUser!.username,

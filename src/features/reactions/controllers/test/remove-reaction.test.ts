@@ -5,7 +5,7 @@ import {
 } from '@root/mocks/reactions.mock';
 import { authUserPayload } from '@root/mocks/auth.mock';
 import { ReactionCache } from '@service/redis/reaction.cache';
-import { reactionQueue } from '@service/queues/reaction.queue';
+import { removeReactionQueue } from '@service/queues/reaction.queue';
 import { Remove } from '@reaction/controllers/remove-reaction';
 
 jest.useFakeTimers();
@@ -37,7 +37,7 @@ describe('Remove', () => {
     }) as Request;
     const res: Response = reactionMockResponse();
     jest.spyOn(ReactionCache.prototype, 'removePostReactionFromCache');
-    const spy = jest.spyOn(reactionQueue, 'addReactionJob');
+    const spy = jest.spyOn(removeReactionQueue, 'addReactionJob');
 
     await Remove.prototype.reaction(req, res);
     expect(
@@ -47,7 +47,7 @@ describe('Remove', () => {
       `${req.currentUser?.username}`,
       JSON.parse(req.params.postReactions),
     );
-    expect(reactionQueue.addReactionJob).toHaveBeenCalledWith(
+    expect(removeReactionQueue.addReactionJob).toHaveBeenCalledWith(
       spy.mock.calls[0][0],
       spy.mock.calls[0][1],
     );
