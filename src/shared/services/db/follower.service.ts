@@ -15,7 +15,7 @@ import {
 import { NotificationModel } from '@notification/models/notification.schema';
 import { socketIONotificationObject } from '@socket/notification';
 import { notificationTemplate } from '@service/emails/templates/notifications/notification-template';
-import { emailQueue } from '@service/queues/email.queue';
+import { followersEmailQueue } from '@service/queues/email.queue';
 import { UserCache } from '@service/redis/user.cache';
 import { map } from 'lodash';
 
@@ -83,7 +83,7 @@ class FollowerService {
       };
       const template: string =
         notificationTemplate.notificationMessageTemplate(templateParams);
-      emailQueue.addEmailJob('followersEmail', {
+      followersEmailQueue.addEmailJob('followersEmail', {
         receiverEmail: response[1].email!,
         template,
         subject: `${username} is now following you.`,

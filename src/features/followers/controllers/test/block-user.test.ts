@@ -6,7 +6,7 @@ import {
 } from '@root/mocks/followers.mock';
 import { AddUser } from '@follower/controllers/block-user';
 import { FollowerCache } from '@service/redis/follower.cache';
-import { blockedUserQueue } from '@service/queues/blocked.queue';
+import { addBlockedUserQueue } from '@service/queues/blocked.queue';
 
 jest.useFakeTimers();
 jest.mock('@service/queues/base.queue');
@@ -29,7 +29,7 @@ describe('AddUser', () => {
       }) as Request;
       const res: Response = followersMockResponse();
       jest.spyOn(FollowerCache.prototype, 'updateBlockedUserPropInCache');
-      jest.spyOn(blockedUserQueue, 'addBlockedUserJob');
+      jest.spyOn(addBlockedUserQueue, 'addBlockedUserJob');
 
       await AddUser.prototype.block(req, res);
       expect(
@@ -48,7 +48,7 @@ describe('AddUser', () => {
         '6064861bc25eaa5a5d2f9bf4',
         'block',
       );
-      expect(blockedUserQueue.addBlockedUserJob).toHaveBeenCalledWith(
+      expect(addBlockedUserQueue.addBlockedUserJob).toHaveBeenCalledWith(
         'addBlockedUserToDB',
         {
           keyOne: `${req.currentUser?.userId}`,
@@ -70,7 +70,7 @@ describe('AddUser', () => {
       }) as Request;
       const res: Response = followersMockResponse();
       jest.spyOn(FollowerCache.prototype, 'updateBlockedUserPropInCache');
-      jest.spyOn(blockedUserQueue, 'addBlockedUserJob');
+      jest.spyOn(addBlockedUserQueue, 'addBlockedUserJob');
 
       await AddUser.prototype.unblock(req, res);
       expect(
@@ -89,7 +89,7 @@ describe('AddUser', () => {
         '6064861bc25eaa5a5d2f9bf4',
         'unblock',
       );
-      expect(blockedUserQueue.addBlockedUserJob).toHaveBeenCalledWith(
+      expect(addBlockedUserQueue.addBlockedUserJob).toHaveBeenCalledWith(
         'removeBlockedUserFromDB',
         {
           keyOne: `${req.currentUser?.userId}`,

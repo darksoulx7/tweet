@@ -8,10 +8,10 @@ import {
   chatMockResponse,
 } from '@root/mocks/chat.mock';
 import { Add } from '@chat/controllers/add-chat-message';
-import { chatQueue } from '@service/queues/chat.queue';
+import { addChatMessageQueue } from '@service/queues/chat.queue';
 import { authUserPayload } from '@root/mocks/auth.mock';
 import { MessageCache } from '@service/redis/message.cache';
-import { emailQueue } from '@service/queues/email.queue';
+import { directMessageEmailQueue } from '@service/queues/email.queue';
 import { existingUser, existingUserTwo } from '@root/mocks/user.mock';
 import { notificationTemplate } from '@service/emails/templates/notifications/notification-template';
 import { UserCache } from '@service/redis/user.cache';
@@ -67,7 +67,7 @@ describe('Add', () => {
     jest
       .spyOn(UserCache.prototype, 'getUserFromCache')
       .mockResolvedValue(existingUserTwo);
-    jest.spyOn(emailQueue, 'addEmailJob');
+    jest.spyOn(directMessageEmailQueue, 'addEmailJob');
 
     const templateParams = {
       username: existingUserTwo.username!,
@@ -78,7 +78,7 @@ describe('Add', () => {
       notificationTemplate.notificationMessageTemplate(templateParams);
 
     await Add.prototype.message(req, res);
-    expect(emailQueue.addEmailJob).toHaveBeenCalledWith('directMessageEmail', {
+    expect(directMessageEmailQueue.addEmailJob).toHaveBeenCalledWith('directMessageEmail', {
       receiverEmail: existingUserTwo.email!,
       template,
       subject: `You've received messages from ${req.currentUser!.username!}`,
@@ -93,7 +93,7 @@ describe('Add', () => {
       authUserPayload,
     ) as Request;
     const res: Response = chatMockResponse();
-    jest.spyOn(emailQueue, 'addEmailJob');
+    jest.spyOn(directMessageEmailQueue, 'addEmailJob');
     jest
       .spyOn(UserCache.prototype, 'getUserFromCache')
       .mockResolvedValue(existingUser);
@@ -107,7 +107,7 @@ describe('Add', () => {
       notificationTemplate.notificationMessageTemplate(templateParams);
 
     await Add.prototype.message(req, res);
-    expect(emailQueue.addEmailJob).not.toHaveBeenCalledWith(
+    expect(directMessageEmailQueue.addEmailJob).not.toHaveBeenCalledWith(
       'directMessageMail',
       {
         receiverEmail: req.currentUser!.email,
@@ -152,7 +152,7 @@ describe('Add', () => {
   });
 
   it('should call chatQueue addChatJob', async () => {
-    jest.spyOn(chatQueue, 'addChatJob');
+    jest.spyOn(addChatMessageQueue, 'addChatJob');
     const req: Request = chatMockRequest(
       {},
       chatMessage,
@@ -164,7 +164,7 @@ describe('Add', () => {
       .mockResolvedValue(existingUser);
 
     await Add.prototype.message(req, res);
-    expect(chatQueue.addChatJob).toHaveBeenCalledTimes(1);
+    expect(addChatMessageQueue.addChatJob).toHaveBeenCalledTimes(1);
   });
 
   it('should send correct json response', async () => {

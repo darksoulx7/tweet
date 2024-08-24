@@ -7,7 +7,7 @@ import {
   postMockRequest,
   postMockResponse,
 } from '@root/mocks/post.mock';
-import { postQueue } from '@service/queues/post.queue';
+import { deletePostQueue } from '@service/queues/post.queue';
 import { Delete } from '@post/controllers/delete-post';
 import { PostCache } from '@service/redis/post.cache';
 
@@ -39,7 +39,7 @@ describe('Delete', () => {
     const res: Response = postMockResponse();
     jest.spyOn(postServer.socketIOPostObject, 'emit');
     jest.spyOn(PostCache.prototype, 'deletePostFromCache');
-    jest.spyOn(postQueue, 'addPostJob');
+    jest.spyOn(deletePostQueue, 'addPostJob');
 
     await Delete.prototype.post(req, res);
     expect(postServer.socketIOPostObject.emit).toHaveBeenCalledWith(
@@ -50,7 +50,7 @@ describe('Delete', () => {
       req.params.postId,
       `${req.currentUser?.userId}`,
     );
-    expect(postQueue.addPostJob).toHaveBeenCalledWith('deletePostFromDB', {
+    expect(deletePostQueue.addPostJob).toHaveBeenCalledWith('deletePostFromDB', {
       keyOne: req.params.postId,
       keyTwo: req.currentUser?.userId,
     });

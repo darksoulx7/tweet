@@ -1,20 +1,13 @@
 import { INotificationJobData } from '@notification/interfaces/notification.interface';
 import { BaseQueue } from '@service/queues/base.queue';
 import { notificationWorker } from '@worker/notification.worker';
+import { Queue as QueueMQ } from 'bullmq';
+import { CONNECTION_CONFIG, CONCURRENCY_LIMIT } from '@global/helpers/constants';
 
 class NotificationQueue extends BaseQueue {
-  constructor() {
-    super('notifications');
-    this.processJob(
-      'updateNotification',
-      5,
-      notificationWorker.updateNotification,
-    );
-    this.processJob(
-      'deleteNotification',
-      5,
-      notificationWorker.deleteNotification,
-    );
+  constructor(queueName: string, jobName: string, jobConcurrency: number, jobProcessor: any) {
+    super(queueName, new QueueMQ(queueName, CONNECTION_CONFIG));
+    this.processJob(jobName, jobConcurrency, jobProcessor);
   }
 
   public addNotificationJob(name: string, data: INotificationJobData): void {
@@ -22,4 +15,13 @@ class NotificationQueue extends BaseQueue {
   }
 }
 
-export const notificationQueue: NotificationQueue = new NotificationQueue();
+export const updateNotificationQueue = new NotificationQueue('notifications', 'updateNotification', CONCURRENCY_LIMIT, notificationWorker.updateNotification);
+export const deleteNotificationQueue = new NotificationQueue('notifications', 'deleteNotification', CONCURRENCY_LIMIT, notificationWorker.deleteNotification);
+
+// export function updateNotification(notificationData: INotificationJobData): void {
+//   updateNotificationQueue.addNotificationJob('updateNotification', notificationData);
+// }
+
+// export function deleteNotification(notificationData: INotificationJobData): void {
+//   deleteNotificationQueue.addNotificationJob('deleteNotification', notificationData);
+// }

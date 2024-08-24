@@ -17,7 +17,7 @@ import {
 } from '@notification/interfaces/notification.interface';
 import { socketIONotificationObject } from '@socket/notification';
 import { notificationTemplate } from '@service/emails/templates/notifications/notification-template';
-import { emailQueue } from '@service/queues/email.queue';
+import { commentsEmailQueue } from '@service/queues/email.queue';
 
 const userCache: UserCache = new UserCache();
 
@@ -64,7 +64,7 @@ class CommentService {
       };
       const template: string =
         notificationTemplate.notificationMessageTemplate(templateParams);
-      emailQueue.addEmailJob('commentsEmail', {
+      commentsEmailQueue.addEmailJob('commentsEmail', {
         receiverEmail: response[2].email!,
         template,
         subject: 'Post notification',

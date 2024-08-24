@@ -11,11 +11,10 @@ import HTTP_STATUS from 'http-status-codes';
 import { IUserDocument } from '@user/interfaces/user.interface';
 import { UserCache } from '@service/redis/user.cache';
 import JWT from 'jsonwebtoken';
-import { authQueue } from '@service/queues/auth.queue';
-import { userQueue } from '@service/queues/user.queue';
+import { addAuthUserQueue } from '@service/queues/auth.queue';
+import { addUserQueue } from '@service/queues/user.queue';
 import { config } from '@root/config';
 import { BadRequestError } from '@global/helpers/error-handler';
-// import { omit } from 'lodash';
 
 const userCache: UserCache = new UserCache();
 
@@ -60,10 +59,8 @@ export class SignUp {
     userDataForCache.profilePicture = `https://res.cloudinary.com/dyjgikbog/image/upload/v${result.version}/${userObjectId}`;
     await userCache.saveUserToCache(`${userObjectId}`, uId, userDataForCache);
 
-    // omit(userDataForCache, ['uId', 'username', 'email', 'avatarColor', 'password',]);
-
-    authQueue.addAuthUserJob('addAuthUserToDB', { value: authData });
-    userQueue.addUserJob('addUserToDB', { value: userDataForCache });
+    addAuthUserQueue.addAuthUserJob('addAuthUserToDB', { value: authData });
+    addUserQueue.addUserJob('addUserToDB', { value: userDataForCache });
 
     const userJwt: string = SignUp.prototype.signToken(authData, userObjectId);
     req.session = { jwt: userJwt };

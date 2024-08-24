@@ -1,16 +1,13 @@
 import { BaseQueue } from '@service/queues/base.queue';
 import { IEmailJob } from '@user/interfaces/user.interface';
 import { emailWorker } from '@worker/email.worker';
+import { Queue as QueueMQ } from 'bullmq';
+import { CONNECTION_CONFIG, CONCURRENCY_LIMIT } from '@global/helpers/constants';
 
 class EmailQueue extends BaseQueue {
-  constructor() {
-    super('emails');
-    this.processJob('forgotPasswordEmail', 5, emailWorker.addNotificationEmail);
-    this.processJob('commentsEmail', 5, emailWorker.addNotificationEmail);
-    this.processJob('followersEmail', 5, emailWorker.addNotificationEmail);
-    this.processJob('reactionsEmail', 5, emailWorker.addNotificationEmail);
-    this.processJob('directMessageEmail', 5, emailWorker.addNotificationEmail);
-    this.processJob('changePassword', 5, emailWorker.addNotificationEmail);
+  constructor(queueName: string, jobName: string, jobConcurrency: number, jobProcessor: any) {
+    super(queueName, new QueueMQ(queueName, CONNECTION_CONFIG));
+    this.processJob(jobName, jobConcurrency, jobProcessor);
   }
 
   public addEmailJob(name: string, data: IEmailJob): void {
@@ -18,4 +15,33 @@ class EmailQueue extends BaseQueue {
   }
 }
 
-export const emailQueue: EmailQueue = new EmailQueue();
+export const forgotPasswordEmailQueue = new EmailQueue('emails', 'forgotPasswordEmail', CONCURRENCY_LIMIT, emailWorker.addNotificationEmail);
+export const commentsEmailQueue = new EmailQueue('emails', 'commentsEmail', CONCURRENCY_LIMIT, emailWorker.addNotificationEmail);
+export const followersEmailQueue = new EmailQueue('emails', 'followersEmail', CONCURRENCY_LIMIT, emailWorker.addNotificationEmail);
+export const reactionsEmailQueue = new EmailQueue('emails', 'reactionsEmail', CONCURRENCY_LIMIT, emailWorker.addNotificationEmail);
+export const directMessageEmailQueue = new EmailQueue('emails', 'directMessageEmail', CONCURRENCY_LIMIT, emailWorker.addNotificationEmail);
+export const changePasswordEmailQueue = new EmailQueue('emails', 'changePassword', CONCURRENCY_LIMIT, emailWorker.addNotificationEmail);
+
+// export function sendForgotPasswordEmail(emailData: IEmailJob): void {
+//   forgotPasswordEmailQueue.addEmailJob('forgotPasswordEmail', emailData);
+// }
+
+// export function sendCommentsEmail(emailData: IEmailJob): void {
+//   commentsEmailQueue.addEmailJob('commentsEmail', emailData);
+// }
+
+// export function sendFollowersEmail(emailData: IEmailJob): void {
+//   followersEmailQueue.addEmailJob('followersEmail', emailData);
+// }
+
+// export function sendReactionsEmail(emailData: IEmailJob): void {
+//   reactionsEmailQueue.addEmailJob('reactionsEmail', emailData);
+// }
+
+// export function sendDirectMessageEmail(emailData: IEmailJob): void {
+//   directMessageEmailQueue.addEmailJob('directMessageEmail', emailData);
+// }
+
+// export function sendChangePasswordEmail(emailData: IEmailJob): void {
+//   changePasswordEmailQueue.addEmailJob('changePassword', emailData);
+// }

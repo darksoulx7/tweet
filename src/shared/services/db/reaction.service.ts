@@ -18,7 +18,7 @@ import {
 import { NotificationModel } from '@notification/models/notification.schema';
 import { socketIONotificationObject } from '@socket/notification';
 import { notificationTemplate } from '@service/emails/templates/notifications/notification-template';
-import { emailQueue } from '@service/queues/email.queue';
+import { reactionsEmailQueue } from '@service/queues/email.queue';
 
 const userCache: UserCache = new UserCache();
 
@@ -85,7 +85,7 @@ class ReactionService {
       };
       const template: string =
         notificationTemplate.notificationMessageTemplate(templateParams);
-      emailQueue.addEmailJob('reactionsEmail', {
+      reactionsEmailQueue.addEmailJob('reactionsEmail', {
         receiverEmail: updatedReaction[0].email!,
         template,
         subject: 'Post reaction notification',

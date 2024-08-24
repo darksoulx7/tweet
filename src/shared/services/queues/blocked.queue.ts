@@ -1,20 +1,13 @@
 import { IBlockedUserJobData } from '@follower/interfaces/follower.interface';
 import { BaseQueue } from '@service/queues/base.queue';
 import { blockedUserWorker } from '@worker/blocked.worker';
+import { Queue as QueueMQ } from 'bullmq';
+import { CONNECTION_CONFIG, CONCURRENCY_LIMIT } from '@global/helpers/constants';
 
 class BlockedUserQueue extends BaseQueue {
-  constructor() {
-    super('blockedUsers');
-    this.processJob(
-      'addBlockedUserToDB',
-      5,
-      blockedUserWorker.addBlockedUserToDB,
-    );
-    this.processJob(
-      'removeBlockedUserFromDB',
-      5,
-      blockedUserWorker.addBlockedUserToDB,
-    );
+  constructor(queueName: string, jobName: string, jobConcurrency: number, jobProcessor: any) {
+    super(queueName, new QueueMQ(queueName, CONNECTION_CONFIG));
+    this.processJob(jobName, jobConcurrency, jobProcessor);
   }
 
   public addBlockedUserJob(name: string, data: IBlockedUserJobData): void {
@@ -22,4 +15,14 @@ class BlockedUserQueue extends BaseQueue {
   }
 }
 
-export const blockedUserQueue: BlockedUserQueue = new BlockedUserQueue();
+export const addBlockedUserQueue = new BlockedUserQueue('blockedUsers', 'addBlockedUserToDB', CONCURRENCY_LIMIT, blockedUserWorker.addBlockedUserToDB);
+// export const removeBlockedUserQueue = new BlockedUserQueue('blockedUsers', 'removeBlockedUserFromDB', CONCURRENCY_LIMIT, blockedUserWorker.removeBlockedUserFromDB);
+
+
+// export function addBlockedUser(userData: IBlockedUserJobData): void {
+//   addBlockedUserQueue.addBlockedUserJob('addBlockedUserToDB', userData);
+// }
+
+// export function removeBlockedUser(userData: IBlockedUserJobData): void {
+//   removeBlockedUserQueue.addBlockedUserJob('removeBlockedUserFromDB', userData);
+// }

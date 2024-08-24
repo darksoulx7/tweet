@@ -11,11 +11,11 @@ import HTTP_STATUS from 'http-status-codes';
 import { IPostDocument } from '@post/interfaces/post.interface';
 import { PostCache } from '@service/redis/post.cache';
 import { socketIOPostObject } from '@socket/post';
-import { postQueue } from '@service/queues/post.queue';
+import { addPostQueue } from '@service/queues/post.queue';
 import { UploadApiResponse } from 'cloudinary';
 import { uploads, videoUpload } from '@global/helpers/cloudinary-upload';
 import { BadRequestError } from '@global/helpers/error-handler';
-import { imageQueue } from '@service/queues/image.queue';
+// import { imageQueue } from '@service/queues/image.queue';
 
 const postCache: PostCache = new PostCache();
 
@@ -52,7 +52,7 @@ export class Create {
       uId: `${req.currentUser!.uId}`,
       createdPost,
     });
-    postQueue.addPostJob('addPostToDB', {
+    addPostQueue.addPostJob('addPostToDB', {
       key: req.currentUser!.userId,
       value: createdPost,
     });
@@ -99,7 +99,7 @@ export class Create {
       uId: `${req.currentUser!.uId}`,
       createdPost,
     });
-    postQueue.addPostJob('addPostToDB', {
+    addPostQueue.addPostJob('addPostToDB', {
       key: req.currentUser!.userId,
       value: createdPost,
     });

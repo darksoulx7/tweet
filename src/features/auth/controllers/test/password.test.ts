@@ -3,7 +3,7 @@ import { Request, Response } from 'express';
 import { Password } from '@auth/controllers/password';
 import { authMock, authMockRequest, authMockResponse } from '@root/mocks/auth.mock';
 import { CustomError } from '@global/helpers/error-handler';
-import { emailQueue } from '@service/queues/email.queue';
+import { forgotPasswordEmailQueue } from '@service/queues/email.queue';
 import { authService } from '@service/db/auth.service';
 
 const WRONG_EMAIL = 'test@email.com';
@@ -49,9 +49,9 @@ describe('Password', () => {
       const req: Request = authMockRequest({}, { email: CORRECT_EMAIL }) as Request;
       const res: Response = authMockResponse();
       jest.spyOn(authService, 'getAuthUserByEmail').mockResolvedValue(authMock);
-      jest.spyOn(emailQueue, 'addEmailJob');
+      jest.spyOn(forgotPasswordEmailQueue, 'addEmailJob');
       await Password.prototype.create(req, res);
-      expect(emailQueue.addEmailJob).toHaveBeenCalled();
+      expect(forgotPasswordEmailQueue.addEmailJob).toHaveBeenCalled();
       expect(res.status).toHaveBeenCalledWith(200);
       expect(res.json).toHaveBeenCalledWith({
         message: 'Password reset email sent.'
@@ -96,9 +96,9 @@ describe('Password', () => {
       }) as Request;
       const res: Response = authMockResponse();
       jest.spyOn(authService, 'getAuthUserByPasswordToken').mockResolvedValue(authMock);
-      jest.spyOn(emailQueue, 'addEmailJob');
+      jest.spyOn(forgotPasswordEmailQueue, 'addEmailJob');
       await Password.prototype.update(req, res);
-      expect(emailQueue.addEmailJob).toHaveBeenCalled();
+      expect(forgotPasswordEmailQueue.addEmailJob).toHaveBeenCalled();
       expect(res.status).toHaveBeenCalledWith(200);
       expect(res.json).toHaveBeenCalledWith({
         message: 'Password successfully updated.'

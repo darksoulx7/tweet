@@ -8,7 +8,7 @@ import {
   postMockRequest,
   postMockResponse,
 } from '@root/mocks/post.mock';
-import { postQueue } from '@service/queues/post.queue';
+import { addPostQueue } from '@service/queues/post.queue';
 import { Create } from '@post/controllers/create-post';
 import { PostCache } from '@service/redis/post.cache';
 import { CustomError } from '@global/helpers/error-handler';
@@ -42,7 +42,7 @@ describe('Create', () => {
       const res: Response = postMockResponse();
       jest.spyOn(postServer.socketIOPostObject, 'emit');
       const spy = jest.spyOn(PostCache.prototype, 'savePostToCache');
-      jest.spyOn(postQueue, 'addPostJob');
+      jest.spyOn(addPostQueue, 'addPostJob');
 
       await Create.prototype.post(req, res);
       const createdPost = spy.mock.calls[0][0].createdPost;
@@ -56,7 +56,7 @@ describe('Create', () => {
         uId: `${req.currentUser?.uId}`,
         createdPost,
       });
-      expect(postQueue.addPostJob).toHaveBeenCalledWith('addPostToDB', {
+      expect(addPostQueue.addPostJob).toHaveBeenCalledWith('addPostToDB', {
         key: req.currentUser?.userId,
         value: createdPost,
       });
@@ -107,7 +107,7 @@ describe('Create', () => {
       const res: Response = postMockResponse();
       jest.spyOn(postServer.socketIOPostObject, 'emit');
       const spy = jest.spyOn(PostCache.prototype, 'savePostToCache');
-      jest.spyOn(postQueue, 'addPostJob');
+      jest.spyOn(addPostQueue, 'addPostJob');
       jest
         .spyOn(cloudinaryUploads, 'uploads')
         .mockImplementation((): any =>
@@ -126,7 +126,7 @@ describe('Create', () => {
         uId: `${req.currentUser?.uId}`,
         createdPost,
       });
-      expect(postQueue.addPostJob).toHaveBeenCalledWith('addPostToDB', {
+      expect(addPostQueue.addPostJob).toHaveBeenCalledWith('addPostToDB', {
         key: req.currentUser?.userId,
         value: createdPost,
       });

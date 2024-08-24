@@ -11,7 +11,7 @@ import {
   updatedPostWithImage,
 } from '@root/mocks/post.mock';
 import { PostCache } from '@service/redis/post.cache';
-import { postQueue } from '@service/queues/post.queue';
+import { updatePostQueue, addPostQueue, deletePostQueue } from '@service/queues/post.queue';
 import { Update } from '@post/controllers/update-post';
 import * as cloudinaryUploads from '@global/helpers/cloudinary-upload';
 
@@ -47,7 +47,7 @@ describe('Update', () => {
         .spyOn(PostCache.prototype, 'updatePostInCache')
         .mockResolvedValue(postMockData);
       jest.spyOn(postServer.socketIOPostObject, 'emit');
-      jest.spyOn(postQueue, 'addPostJob');
+      jest.spyOn(updatePostQueue, 'addPostJob');
 
       await Update.prototype.posts(req, res);
       expect(postSpy).toHaveBeenCalledWith(`${postMockData._id}`, updatedPost);
@@ -56,7 +56,7 @@ describe('Update', () => {
         postMockData,
         'posts',
       );
-      expect(postQueue.addPostJob).toHaveBeenCalledWith('updatePostInDB', {
+      expect(updatePostQueue.addPostJob).toHaveBeenCalledWith('updatePostInDB', {
         key: `${postMockData._id}`,
         value: postMockData,
       });
@@ -86,7 +86,7 @@ describe('Update', () => {
         .spyOn(PostCache.prototype, 'updatePostInCache')
         .mockImplementationOnce(() => Promise.resolve(postMockData));
       jest.spyOn(postServer.socketIOPostObject, 'emit');
-      jest.spyOn(postQueue, 'addPostJob');
+      jest.spyOn(updatePostQueue, 'addPostJob');
 
       await Update.prototype.postWithImage(req, res);
       expect(PostCache.prototype.updatePostInCache).toHaveBeenCalledWith(
@@ -98,7 +98,7 @@ describe('Update', () => {
         postMockData,
         'posts',
       );
-      expect(postQueue.addPostJob).toHaveBeenCalledWith('updatePostInDB', {
+      expect(updatePostQueue.addPostJob).toHaveBeenCalledWith('updatePostInDB', {
         key: `${postMockData._id}`,
         value: postMockData,
       });
@@ -131,7 +131,7 @@ describe('Update', () => {
           Promise.resolve({ version: '1234', public_id: '123456' }),
         );
       jest.spyOn(postServer.socketIOPostObject, 'emit');
-      jest.spyOn(postQueue, 'addPostJob');
+      jest.spyOn(updatePostQueue, 'addPostJob');
 
       await Update.prototype.postWithImage(req, res);
       expect(PostCache.prototype.updatePostInCache).toHaveBeenCalledWith(
@@ -143,7 +143,7 @@ describe('Update', () => {
         postMockData,
         'posts',
       );
-      expect(postQueue.addPostJob).toHaveBeenCalledWith('updatePostInDB', {
+      expect(updatePostQueue.addPostJob).toHaveBeenCalledWith('updatePostInDB', {
         key: `${postMockData._id}`,
         value: postMockData,
       });
