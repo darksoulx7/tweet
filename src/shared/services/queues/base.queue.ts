@@ -5,17 +5,15 @@ import { IEmailJob, IUserJob } from '@user/interfaces/user.interface';
 import { createBullBoard } from '@bull-board/api';
 import { ExpressAdapter } from '@bull-board/express';
 import { BullMQAdapter } from '@bull-board/api/bullMQAdapter';
-import { Job, Queue as QueueMQ, QueueEvents, Worker } from 'bullmq';
+import { Job, Queue as QueueMQ, Worker } from 'bullmq';
 import { IPostJobData } from '@post/interfaces/post.interface';
 import { IReactionJob } from '@reaction/interfaces/reaction.interface';
 import { ICommentJob } from '@comment/interfaces/comment.interface';
-import {
-  IBlockedUserJobData,
-  IFollowerJobData,
-} from '@follower/interfaces/follower.interface';
+import { IBlockedUserJobData, IFollowerJobData } from '@follower/interfaces/follower.interface';
 import { INotificationJobData } from '@notification/interfaces/notification.interface';
 import { IFileImageJobData } from '@image/interfaces/image.interface';
 import { IChatJobData, IMessageData } from '@chat/interfaces/chat.interface';
+import { CONNECTION_CONFIG } from '@global/helpers/constants';
 
 type IBaseJobData =
   | IAuthJob
@@ -43,7 +41,7 @@ export abstract class BaseQueue {
 
   constructor(queueName: string, queueInstance?: QueueMQ) {
     this.queue = queueInstance || new QueueMQ(queueName, {
-      connection: { port: 6379, password: '', host: 'localhost' }, // or redisConnection
+      connection: CONNECTION_CONFIG.connection,
     });
     bullAdapters.push(new BullMQAdapter(this.queue));
     bullAdapters = [...new Set(bullAdapters)];
@@ -89,15 +87,16 @@ export abstract class BaseQueue {
       }
         try {
           await callback(job);
-          this.log.info(
-            `${name} - worker job ${job.id} has been processed successfully`,
-          );
+          this.log.info(`${name} - worker job ${job.id} has been processed successfully`);
         } catch (error) {
           this.log.error(`Error processing job ${job.id}: ${error}`);
           throw error;
         }
       },
-      { concurrency },
+      { 
+        connection: CONNECTION_CONFIG.connection, 
+        concurrency
+       },
     );
 
     worker.on('completed', (job: Job) => {
@@ -106,9 +105,7 @@ export abstract class BaseQueue {
     });
 
     worker.on('failed', (job: Job | undefined, error: Error) => {
-      this.log.info(
-        `${name} - worker job ${job?.id} failed with error ${error.message}`
-      );
+      this.log.info(`${name} - worker job ${job?.id} failed with error ${error.message}`);
     });
   }
 }
