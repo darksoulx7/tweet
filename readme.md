@@ -193,20 +193,3 @@ Make sure mongodb and redis are both running on your local machine.
 - There are some properties named `<variable-prefix>` that you need to replace with the `prefix` value from your terraform `variables.tf`. Search the config.yml file and replace `<variable-prefix>`.
 
 ## You can find the frontend code [here](https://github.com/uzochukwueddie/chatty)
-
-## project env
-MONGO_URL=mongodb+srv://rengoku:admin123@cluster0.fu2qi6k.mongodb.net/twitter?retryWrites=true&w=majority
-JWT_TOKEN=temp
-NODE_ENV=development
-SECRET_KEY_ONE=thisisasecretkeyone
-SECRET_KEY_TWO=thisisasecretkeyone
-CLIENT_URL=http://localhost:3000/
-REDIS_HOST=redis://localhost:6379/
-CLOUD_NAME=dyjgikbog
-CLOUD_API_KEY=138662197532828
-CLOUD_API_SECRET=xWtRAU0ilnrPNWF70U-GKY0Q8js
-SENDER_EMAIL=elvera.greenholt36@ethereal.email
-SENDER_EMAIL_PASSWORD=vvtM1PFjAjvFhHWgbJ
-SENDGRID_API_KEY=
-SENDGRID_SENDER=
-EC2_URL=http://169.254.169.254/latest/meta-data/instance-id

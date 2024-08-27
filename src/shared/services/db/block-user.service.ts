@@ -3,7 +3,7 @@ import { PushOperator } from 'mongodb';
 import { UserModel } from '@user/models/user.schema';
 
 class BlockUserService {
-  public async blockUser(userId: string, followerId: string): Promise<void> {
+  public async blockUser(userId: any, followerId: any): Promise<void> {
     UserModel.bulkWrite([
       {
         updateOne: {

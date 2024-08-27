@@ -23,9 +23,10 @@ class Config {
   public EC2_URL: string | undefined;
 
   private readonly DEFAULT_NODE_ENV = 'development';
+  private readonly DEFAULT_MONGO_URL = 'mongodb+srv://rengoku:admin123@cluster0.fu2qi6k.mongodb.net/twitter?retryWrites=true&w=majority';
 
   constructor() {
-    this.MONGO_URL = process.env.MONGO_URL;
+    this.MONGO_URL = process.env.MONGO_URL || this.DEFAULT_MONGO_URL;
     this.JWT_TOKEN = process.env.JWT_TOKEN || '1234';
     this.NODE_ENV = process.env.NODE_ENV || this.DEFAULT_NODE_ENV;
     this.SECRET_KEY_ONE = process.env.SECRET_KEY_ONE || '';
