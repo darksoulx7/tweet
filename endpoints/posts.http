@@ -50,36 +50,35 @@ withCredentials: true
 }
 
 ###
-PUT {{baseUrl}}/{{urlPath}}/post/<postId>
+PUT {{baseUrl}}/{{urlPath}}/post/66cc29ac63453d611cd4a24d
 Content-Type: application/json
 Accept: application/json
 withCredentials: true,
 
 {
-  "post": "",
-  "bgColor": "",
-  "privacy": "",
+  "post": "updated post yo!!",
+  "bgColor": "black",
+  "privacy": "Private",
   "gifUrl": "",
   "profilePicture": "<cloudinary-user-profile-picture-url>",
   "feelings": ""
 }
 
 ###
-PUT {{baseUrl}}/{{urlPath}}/post/image/<postId>
+PUT {{baseUrl}}/{{urlPath}}/post/image/66cc29ac63453d611cd4a24d
 Content-Type: application/json
 Accept: application/json
 withCredentials: true,
 
 {
-  "post": "",
-  "bgColor": "",
-  "privacy": "",
+  "post": "post with image",
+  "bgColor": "green",
+  "privacy": "Public",
   "gifUrl": "",
-  "profilePicture": "<cloudinary-user-profile-picture-url>",
-  "feelings": "",
-  "imgId": "<imgId-form-post>",
-  "imgVersion": "<imgVersion-for-post>",
-  "image": "<base64-encoded-string>"
+  "profilePicture": "https://res.cloudinary.com/dyjgikbog/image/upload/v1724149982/66c470dd89c67d47b5a9e3b7",
+  "feelings": "sad",
+  "imgId": "kzieivtcg0crdxa62ul9",
+  "imgVersion": ""
 }
 
 ###
