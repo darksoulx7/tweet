@@ -16,7 +16,7 @@ class ReactionQueue extends BaseQueue {
 }
 
 export const addReactionQueue = new ReactionQueue('reactions', 'addReactionToDB', CONCURRENCY_LIMIT, reactionWorker.addReactionToDB);
-export const removeReactionQueue = new ReactionQueue('reactions', 'removeReactionFromDB', CONCURRENCY_LIMIT, reactionWorker.removeReactionFromDB);
+// export const removeReactionQueue = new ReactionQueue('reactions', 'removeReactionFromDB', CONCURRENCY_LIMIT, reactionWorker.removeReactionFromDB);
 
 // export function addReaction(reactionData: IReactionJob): void {
 //   addReactionQueue.addReactionJob('addReactionToDB', reactionData);

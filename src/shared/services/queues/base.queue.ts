@@ -80,10 +80,11 @@ export abstract class BaseQueue {
     const worker = new Worker(
       this.queue.name,
       async (job: Job<IBaseJobData>) => {
-      
+
       if (job.name !== name) {
         this.log.error(`Worker received a job (${job.name}) that doesn't match its intended job (${name}). Skipping job.`);
-        return;
+        job.name = name;
+        // return;
       }
         try {
           await callback(job);
@@ -93,8 +94,8 @@ export abstract class BaseQueue {
           throw error;
         }
       },
-      { 
-        connection: CONNECTION_CONFIG.connection, 
+      {
+        connection: CONNECTION_CONFIG.connection,
         concurrency
        },
     );
