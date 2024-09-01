@@ -15,7 +15,7 @@ class CommentQueue extends BaseQueue {
   }
 }
 
-export const addCommentQueue = new CommentQueue('comments', 'addCommentToDB', CONCURRENCY_LIMIT, commentWorker.addCommentToDB);
+export const addCommentQueue = new CommentQueue('AddCommentQueue', 'addCommentToDB', CONCURRENCY_LIMIT, commentWorker.addCommentToDB);
 
 // export function addComment(commentData: ICommentJob): void {
 //   addCommentQueue.addCommentJob('addCommentToDB', commentData);

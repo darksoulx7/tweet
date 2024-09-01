@@ -15,8 +15,8 @@ class BlockedUserQueue extends BaseQueue {
   }
 }
 
-export const addBlockedUserQueue = new BlockedUserQueue('blockedUsers', 'addBlockedUserToDB', CONCURRENCY_LIMIT, blockedUserWorker.addBlockedUserToDB);
-// export const removeBlockedUserQueue = new BlockedUserQueue('blockedUsers', 'removeBlockedUserFromDB', CONCURRENCY_LIMIT, blockedUserWorker.removeBlockedUserFromDB);
+export const addBlockedUserQueue = new BlockedUserQueue('BlockedUsersQueue', 'addBlockedUserToDB', CONCURRENCY_LIMIT, blockedUserWorker.addBlockedUserToDB);
+// export const removeBlockedUserQueue = new BlockedUserQueue('RemoveBlockedUserQueue', 'removeBlockedUserFromDB', CONCURRENCY_LIMIT, blockedUserWorker.removeBlockedUserFromDB);
 
 
 // export function addBlockedUser(userData: IBlockedUserJobData): void {

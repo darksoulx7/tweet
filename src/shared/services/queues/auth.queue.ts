@@ -15,7 +15,7 @@ class AuthQueue extends BaseQueue {
   }
 }
 
-export const addAuthUserQueue = new AuthQueue('auth', 'addAuthUserToDB', CONCURRENCY_LIMIT, authWorker.addAuthUserToDB);
+export const addAuthUserQueue = new AuthQueue('AuthQueue', 'addAuthUserToDB', CONCURRENCY_LIMIT, authWorker.addAuthUserToDB);
 
 // export function addAuthUser(authData: IAuthJob): void {
 //   addAuthUserQueue.addAuthUserJob('addAuthUserToDB', authData);
