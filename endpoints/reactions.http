@@ -2,19 +2,19 @@
 @urlPath = api/v1
 
 ###
-GET {{baseUrl}}/{{urlPath}}/post/reactions/<postId>
+GET {{baseUrl}}/{{urlPath}}/post/reactions/66d385d1c5f3765f27c5194b
 Content-Type: application/json
 Accept: application/json
 withCredentials: true
 
 ###
-GET {{baseUrl}}/{{urlPath}}/post/single/reaction/username/<username-of-logged-in-user>/<postId>
+GET {{baseUrl}}/{{urlPath}}/post/single/reaction/username/Sukuna01/66d385d1c5f3765f27c5194b
 Content-Type: application/json
 Accept: application/json
 withCredentials: true
 
 ###
-GET {{baseUrl}}/{{urlPath}}/post/reactions/username/<username-of-logged-in-user>
+GET {{baseUrl}}/{{urlPath}}/post/reactions/username/Sukuna01
 Content-Type: application/json
 Accept: application/json
 withCredentials: true
@@ -33,13 +33,13 @@ withCredentials: true
   "userTo": "66bf5d5114c3069bff776ecc",
   "postId": "66d385d1c5f3765f27c5194b",
   "type": "love",
-  "previousReaction": "wow",
+  "previousReaction": "",
   "postReactions": {"like": 0,"love": 1,"happy": 0,"sad": 0,"wow": 0,"angry": 0},
   "profilePicture": "https://res.cloudinary.com/dyjgikbog/image/upload/v1724149982/66c470dd89c67d47b5a9e3b7"
 }
 
 ###
-DELETE {{baseUrl}}/{{urlPath}}/post/reaction/<postId>/<previousReaction>/{"like": 0,"love": 0,"happy": 0,"sad": 0,"wow": 0,"angry": 0}
+DELETE {{baseUrl}}/{{urlPath}}/post/reaction/66d385d1c5f3765f27c5194b/happy/{"like": 0,"love": 0,"happy": 0,"sad": 0,"wow": 0,"angry": 0}
 Content-Type: application/json
 Accept: application/json
 withCredentials: true

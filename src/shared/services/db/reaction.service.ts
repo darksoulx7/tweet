@@ -66,35 +66,23 @@ class ReactionService {
     ]);
   }
 
-  public async getPostReactions(
-    query: IQueryReaction,
-    sort: Record<string, 1 | -1>,
-  ): Promise<[IReactionDocument[], number]> {
+  public async getPostReactions(query: IQueryReaction, sort: Record<string, 1 | -1>): Promise<[IReactionDocument[], number]> {
     const reactions: IReactionDocument[] = await ReactionModel.aggregate([
-      { $match: query },
-      { $sort: sort },
+      { $match: query }, { $sort: sort },
     ]);
     return [reactions, reactions.length];
   }
 
-  public async getSinglePostReactionByUsername(
-    postId: string,
-    username: string,
-  ): Promise<[IReactionDocument, number] | []> {
-    const reactions: IReactionDocument[] = await ReactionModel.aggregate([
-      {
-        $match: {
-          postId: new mongoose.Types.ObjectId(postId),
-          username: Helpers.firstLetterUppercase(username),
-        },
-      },
-    ]);
+  public async getSinglePostReactionByUsername(postId: string, username: string): Promise<[IReactionDocument, number] | []> {
+    const reactions: IReactionDocument[] = await ReactionModel.aggregate([{
+      $match: {
+        postId: new mongoose.Types.ObjectId(postId),
+        username: Helpers.firstLetterUppercase(username),
+      }}]);
     return reactions.length ? [reactions[0], 1] : [];
   }
 
-  public async getReactionsByUsername(
-    username: string,
-  ): Promise<IReactionDocument[]> {
+  public async getReactionsByUsername(username: string): Promise<IReactionDocument[]> {
     const reactions: IReactionDocument[] = await ReactionModel.aggregate([
       { $match: { username: Helpers.firstLetterUppercase(username) } },
     ]);
