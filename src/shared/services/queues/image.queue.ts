@@ -15,10 +15,10 @@ class ImageQueue extends BaseQueue {
   }
 }
 
-export const addUserProfileImageQueue = new ImageQueue('images', 'addUserProfileImageToDB', CONCURRENCY_LIMIT, imageWorker.addUserProfileImageToDB);
-export const updateBGImageQueue = new ImageQueue('images', 'updateBGImageInDB', CONCURRENCY_LIMIT, imageWorker.updateBGImageInDB);
-export const addImageQueue = new ImageQueue('images', 'addImageToDB', CONCURRENCY_LIMIT, imageWorker.addImageToDB);
-export const removeImageQueue = new ImageQueue('images', 'removeImageFromDB', CONCURRENCY_LIMIT, imageWorker.removeImageFromDB);
+export const addUserProfileImageQueue = new ImageQueue('AddUserProfileImageQueue', 'addUserProfileImageToDB', CONCURRENCY_LIMIT, imageWorker.addUserProfileImageToDB);
+export const updateBGImageQueue = new ImageQueue('UpdateBGImageQueue', 'updateBGImageInDB', CONCURRENCY_LIMIT, imageWorker.updateBGImageInDB);
+export const addImageQueue = new ImageQueue('AddImageQueue', 'addImageToDB', CONCURRENCY_LIMIT, imageWorker.addImageToDB);
+export const removeImageQueue = new ImageQueue('RemoveImageQueue', 'removeImageFromDB', CONCURRENCY_LIMIT, imageWorker.removeImageFromDB);
 
 // export function addUserProfileImage(imageData: IFileImageJobData): void {
 //   addUserProfileImageQueue.addImageJob('addUserProfileImageToDB', imageData);

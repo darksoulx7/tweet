@@ -15,10 +15,10 @@ class UserQueue extends BaseQueue {
   }
 }
 
-export const addUserQueue = new UserQueue('user', 'addUserToDB', CONCURRENCY_LIMIT, userWorker.addUserToDB);
-export const updateSocialLinksQueue = new UserQueue('user', 'updateSocialLinksInDB', CONCURRENCY_LIMIT, userWorker.updateSocialLinks);
-export const updateBasicInfoQueue = new UserQueue('user', 'updateBasicInfoInDB', CONCURRENCY_LIMIT, userWorker.updateUserInfo);
-export const updateNotificationSettingsQueue = new UserQueue('user', 'updateNotificationSettings', CONCURRENCY_LIMIT, userWorker.updateNotificationSettings);
+export const addUserQueue = new UserQueue('AddUserQueue', 'addUserToDB', CONCURRENCY_LIMIT, userWorker.addUserToDB);
+export const updateSocialLinksQueue = new UserQueue('UpdateSocialLinksQueue', 'updateSocialLinksInDB', CONCURRENCY_LIMIT, userWorker.updateSocialLinks);
+export const updateBasicInfoQueue = new UserQueue('UpdateBasicInfoQueue', 'updateBasicInfoInDB', CONCURRENCY_LIMIT, userWorker.updateUserInfo);
+export const updateNotificationSettingsQueue = new UserQueue('UpdateNotificationSettingsQueue', 'updateNotificationSettings', CONCURRENCY_LIMIT, userWorker.updateNotificationSettings);
 
 // export function addUser(userData: IUserJob): void {
 //   addUserQueue.addUserJob('addUserToDB', userData);

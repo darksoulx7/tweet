@@ -15,8 +15,8 @@ class FollowerQueue extends BaseQueue {
   }
 }
 
-export const addFollowerQueue = new FollowerQueue('followers', 'addFollowerToDB', CONCURRENCY_LIMIT, followerWorker.addFollowerToDB);
-export const removeFollowerQueue = new FollowerQueue('followers', 'removeFollowerFromDB', CONCURRENCY_LIMIT, followerWorker.removeFollowerFromDB);
+export const addFollowerQueue = new FollowerQueue('AddFollowerQueue', 'addFollowerToDB', CONCURRENCY_LIMIT, followerWorker.addFollowerToDB);
+export const removeFollowerQueue = new FollowerQueue('RemoveFollowerQueue', 'removeFollowerFromDB', CONCURRENCY_LIMIT, followerWorker.removeFollowerFromDB);
 
 // export function addFollower(followerData: IFollowerJobData): void {
 //   addFollowerQueue.addFollowerJob('addFollowerToDB', followerData);

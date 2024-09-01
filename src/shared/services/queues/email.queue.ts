@@ -15,12 +15,12 @@ class EmailQueue extends BaseQueue {
   }
 }
 
-export const forgotPasswordEmailQueue = new EmailQueue('emails', 'forgotPasswordEmail', CONCURRENCY_LIMIT, emailWorker.addNotificationEmail);
-export const commentsEmailQueue = new EmailQueue('emails', 'commentsEmail', CONCURRENCY_LIMIT, emailWorker.addNotificationEmail);
-export const followersEmailQueue = new EmailQueue('emails', 'followersEmail', CONCURRENCY_LIMIT, emailWorker.addNotificationEmail);
-export const reactionsEmailQueue = new EmailQueue('emails', 'reactionsEmail', CONCURRENCY_LIMIT, emailWorker.addNotificationEmail);
-export const directMessageEmailQueue = new EmailQueue('emails', 'directMessageEmail', CONCURRENCY_LIMIT, emailWorker.addNotificationEmail);
-export const changePasswordEmailQueue = new EmailQueue('emails', 'changePassword', CONCURRENCY_LIMIT, emailWorker.addNotificationEmail);
+export const forgotPasswordEmailQueue = new EmailQueue('ForgotPasswordEmailQueue', 'forgotPasswordEmail', CONCURRENCY_LIMIT, emailWorker.addNotificationEmail);
+export const commentsEmailQueue = new EmailQueue('CommentsEmailQueue', 'commentsEmail', CONCURRENCY_LIMIT, emailWorker.addNotificationEmail);
+export const followersEmailQueue = new EmailQueue('FollowersEmailQueue', 'followersEmail', CONCURRENCY_LIMIT, emailWorker.addNotificationEmail);
+export const reactionsEmailQueue = new EmailQueue('ReactionsEmailQueue', 'reactionsEmail', CONCURRENCY_LIMIT, emailWorker.addNotificationEmail);
+export const directMessageEmailQueue = new EmailQueue('DirectMessageEmailQueue', 'directMessageEmail', CONCURRENCY_LIMIT, emailWorker.addNotificationEmail);
+export const changePasswordEmailQueue = new EmailQueue('ChangePasswordQueue', 'changePassword', CONCURRENCY_LIMIT, emailWorker.addNotificationEmail);
 
 // export function sendForgotPasswordEmail(emailData: IEmailJob): void {
 //   forgotPasswordEmailQueue.addEmailJob('forgotPasswordEmail', emailData);

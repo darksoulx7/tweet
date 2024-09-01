@@ -14,9 +14,9 @@ class PostQueue extends BaseQueue {
   }
 }
 
-export const addPostQueue = new PostQueue('addPostQueue', 'addPostToDB', CONCURRENCY_LIMIT, postWorker.savePostToDB);
-export const deletePostQueue = new PostQueue('deletePostQueue', 'deletePostFromDB', CONCURRENCY_LIMIT, postWorker.deletePostFromDB);
-export const updatePostQueue = new PostQueue('updatePostQueue', 'updatePostInDB', CONCURRENCY_LIMIT, postWorker.updatePostInDB);
+export const addPostQueue = new PostQueue('AddPostQueue', 'addPostToDB', CONCURRENCY_LIMIT, postWorker.savePostToDB);
+export const deletePostQueue = new PostQueue('DeletePostQueue', 'deletePostFromDB', CONCURRENCY_LIMIT, postWorker.deletePostFromDB);
+export const updatePostQueue = new PostQueue('UpdatePostQueue', 'updatePostInDB', CONCURRENCY_LIMIT, postWorker.updatePostInDB);
 
 // export function addPostJob(postData: IPostJobData): void {
 //   addPostQueue.addPostJob('addPostToDB', postData);
