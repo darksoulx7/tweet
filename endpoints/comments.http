@@ -2,19 +2,19 @@
 @urlPath = api/v1
 
 ###
-GET {{baseUrl}}/{{urlPath}}/post/comments/<postId>
+GET {{baseUrl}}/{{urlPath}}/post/comments/66d774d0c288d48c6f5a9517
 Content-Type: application/json
 Accept: application/json
 withCredentials: true
 
 ###
-GET {{baseUrl}}/{{urlPath}}/post/commentsnames/<postId>
+GET {{baseUrl}}/{{urlPath}}/post/commentsnames/66d774d0c288d48c6f5a9517
 Content-Type: application/json
 Accept: application/json
 withCredentials: true
 
 ###
-GET {{baseUrl}}/{{urlPath}}/post/single/comment/<postId>/<commentId>
+GET {{baseUrl}}/{{urlPath}}/post/single/comment/66d774d0c288d48c6f5a9517/66d77cd1142f03e9b0663fe2
 Content-Type: application/json
 Accept: application/json
 withCredentials: true
@@ -26,8 +26,8 @@ Accept: application/json
 withCredentials: true
 
 {
-  "userTo": "",
-  "postId": "",
-  "comment": "",
-  "profilePicture": "<cloudinary-user-profile-picture-url>"
+  "userTo": "66bf5d5114c3069bff776ecc",
+  "postId": "66d774d0c288d48c6f5a9517",
+  "comment": "This is a 4rd comment",
+  "profilePicture": "https://res.cloudinary.com/dyjgikbog/image/upload/v1724149982/66c470dd89c67d47b5a9e3b7"
 }
