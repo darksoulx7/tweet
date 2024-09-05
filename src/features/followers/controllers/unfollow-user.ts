@@ -8,6 +8,11 @@ const followerCache: FollowerCache = new FollowerCache();
 export class Remove {
   public async follower(req: Request, res: Response): Promise<void> {
     const { followeeId, followerId } = req.params;
+
+    if (followeeId === followerId) {
+      res.status(HTTP_STATUS.BAD_REQUEST).json({ message: `FollowerId ${followerId} and FolloweeId ${followeeId} cannot be same`});
+    }
+
     const removeFollowerFromCache: Promise<void> = followerCache.removeFollowerFromCache(`following:${req.currentUser!.userId}`, followeeId);
     const removeFolloweeFromCache: Promise<void> = followerCache.removeFollowerFromCache(`followers:${followeeId}`, followerId);
 

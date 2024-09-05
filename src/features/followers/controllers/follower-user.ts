@@ -15,7 +15,11 @@ const userCache: UserCache = new UserCache();
 export class Add {
   public async follower(req: Request, res: Response): Promise<void> {
     const { followerId } = req.params;
-    // update count in cache
+
+    if (followerId === req.currentUser!.userId) {
+      res.status(HTTP_STATUS.BAD_REQUEST).json({ message: `FollowerId ${req.currentUser!.userId} and FolloweeId ${followerId} cannot be same`});
+    }
+
     const followersCount: Promise<void> = followerCache.updateFollowersCountInCache(`${followerId}`, 'followersCount', 1);
     const followeeCount: Promise<void> = followerCache.updateFollowersCountInCache(`${req.currentUser!.userId}`, 'followingCount', 1);
     await Promise.all([followersCount, followeeCount]);

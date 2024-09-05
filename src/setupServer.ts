@@ -22,6 +22,7 @@ import applicationRoutes from '@root/routes';
 import Logger from 'bunyan';
 import { IErrorResponse, CustomError } from '@global/helpers/error-handler';
 import { SocketIOPostHandler } from '@socket/post';
+import { SocketIOFollowerHandler, socketIOFollowerObject } from '@socket/follower';
 
 const SERVER_PORT = 9090;
 const log: Logger = config.createLogger('server');
@@ -132,6 +133,9 @@ export class ChattyServer {
 
   private socketIOConnections(io: Server): void {
     const postSocketHandler: SocketIOPostHandler = new SocketIOPostHandler(io);
+    const followerSocketHandler: SocketIOFollowerHandler  = new SocketIOFollowerHandler(io);
+
     postSocketHandler.listen();
+    followerSocketHandler.listen();
   }
 }

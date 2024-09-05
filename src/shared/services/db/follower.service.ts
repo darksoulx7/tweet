@@ -103,23 +103,9 @@ class FollowerService {
   public async getFolloweeData(userObjectId: ObjectId): Promise<IFollowerData[]> {
     const followee: IFollowerData[] = await FollowerModel.aggregate([
       { $match: { followerId: userObjectId } },
-      {
-        $lookup: {
-          from: 'User',
-          localField: 'followeeId',
-          foreignField: '_id',
-          as: 'followeeId',
-        },
-      },
+      { $lookup: { from: 'User', localField: 'followeeId', foreignField: '_id', as: 'followeeId' } },
       { $unwind: '$followeeId' },
-      {
-        $lookup: {
-          from: 'Auth',
-          localField: 'followeeId.authId',
-          foreignField: '_id',
-          as: 'authId',
-        },
-      },
+      { $lookup: { from: 'Auth', localField: 'followeeId.authId', foreignField: '_id', as: 'authId', } },
       { $unwind: '$authId' },
       {
         $addFields: {
@@ -134,15 +120,7 @@ class FollowerService {
           userProfile: '$followeeId',
         },
       },
-      {
-        $project: {
-          authId: 0,
-          followerId: 0,
-          followeeId: 0,
-          createdAt: 0,
-          __v: 0,
-        },
-      },
+      { $project: { authId: 0, followerId: 0, followeeId: 0, createdAt: 0, __v: 0 } },
     ]);
     return followee;
   }
@@ -150,23 +128,9 @@ class FollowerService {
   public async getFollowerData(userObjectId: ObjectId): Promise<IFollowerData[]> {
     const follower: IFollowerData[] = await FollowerModel.aggregate([
       { $match: { followeeId: userObjectId } },
-      {
-        $lookup: {
-          from: 'User',
-          localField: 'followerId',
-          foreignField: '_id',
-          as: 'followerId',
-        },
-      },
+      { $lookup: { from: 'User', localField: 'followerId', foreignField: '_id', as: 'followerId' } },
       { $unwind: '$followerId' },
-      {
-        $lookup: {
-          from: 'Auth',
-          localField: 'followerId.authId',
-          foreignField: '_id',
-          as: 'authId',
-        },
-      },
+      { $lookup: { from: 'Auth', localField: 'followerId.authId', foreignField: '_id', as: 'authId' } },
       { $unwind: '$authId' },
       {
         $addFields: {
@@ -181,15 +145,7 @@ class FollowerService {
           userProfile: '$followerId',
         },
       },
-      {
-        $project: {
-          authId: 0,
-          followerId: 0,
-          followeeId: 0,
-          createdAt: 0,
-          __v: 0,
-        },
-      },
+      { $project: { authId: 0, followerId: 0, followeeId: 0, createdAt: 0, __v: 0 } },
     ]);
     return follower;
   }
@@ -197,12 +153,7 @@ class FollowerService {
   public async getFolloweesIds(userId: string): Promise<string[]> {
     const followee = await FollowerModel.aggregate([
       { $match: { followerId: new mongoose.Types.ObjectId(userId) } },
-      {
-        $project: {
-          followeeId: 1,
-          _id: 0,
-        },
-      },
+      { $project: { followeeId: 1, _id: 0 } },
     ]);
     return map(followee, (result) => result.followeeId.toString());
   }
