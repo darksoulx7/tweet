@@ -1,5 +1,5 @@
 @baseUrl = http://localhost:9090
-@urlPath = api/v1
+@urlPath = e166oahk87
 
 ###
 GET {{baseUrl}}/{{urlPath}}/post/comments/66d774d0c288d48c6f5a9517
