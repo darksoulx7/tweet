@@ -1,0 +1,8 @@
+Followers                |  Followings
+user2 - [user 1]          | user1 -  [user2, user3]
+user1 - [user2, user3]    | user2 - [user1]
+user3 - [user1]
+                          |  user3- [user1]
+ _______          _______    _______
+| user1 |        | user2 |  | user3 |
+ _______          _______    _______

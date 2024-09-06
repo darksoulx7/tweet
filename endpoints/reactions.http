@@ -1,5 +1,5 @@
 @baseUrl = http://localhost:9090
-@urlPath = api/v1
+@urlPath = e166oahk87
 
 ###
 GET {{baseUrl}}/{{urlPath}}/post/reactions/66d385d1c5f3765f27c5194b
