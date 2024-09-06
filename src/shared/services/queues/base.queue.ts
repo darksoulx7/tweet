@@ -81,11 +81,11 @@ export abstract class BaseQueue {
       this.queue.name,
       async (job: Job<IBaseJobData>) => {
 
-      if (job.name !== name) {
-        this.log.error(`Worker received a job (${job.name}) that doesn't match its intended job (${name}). Skipping job.`);
-        job.name = name;
-        // return;
-      }
+        if (job.name !== name) {
+          this.log.info(`Worker received a job (${job.name}) that doesn't match its intended job (${name}).`);
+          job.name = name;
+        }
+
         try {
           await callback(job);
           this.log.info(`${name} - worker job ${job.id} has been processed successfully`);
