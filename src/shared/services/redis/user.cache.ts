@@ -99,9 +99,7 @@ export class UserCache extends BaseCache {
         await this.client.connect();
       }
 
-      const response: IUserDocument = (await this.client.HGETALL(
-        `users:${userId}`,
-      )) as unknown as IUserDocument;
+      const response: IUserDocument = (await this.client.HGETALL(`users:${userId}`)) as unknown as IUserDocument;
       response.createdAt = new Date(Helpers.parseJson(`${response.createdAt}`));
       response.postsCount = Helpers.parseJson(`${response.postsCount}`);
       response.blocked = Helpers.parseJson(`${response.blocked}`);
@@ -125,18 +123,12 @@ export class UserCache extends BaseCache {
     }
   }
 
-  public async getUsersFromCache(
-    start: number,
-    end: number,
-    excludedUserKey: string,
-  ): Promise<IUserDocument[]> {
+  public async getUsersFromCache(start: number, end: number, excludedUserKey: string): Promise<IUserDocument[]> {
     try {
       if (!this.client.isOpen) {
         await this.client.connect();
       }
-      const response: string[] = await this.client.ZRANGE('user', start, end, {
-        REV: true,
-      });
+      const response: string[] = await this.client.ZRANGE('user', start, end, { REV: true });
       const multi: ReturnType<typeof this.client.multi> = this.client.multi();
       for (const key of response) {
         if (key !== excludedUserKey) {
@@ -181,26 +173,17 @@ export class UserCache extends BaseCache {
         await this.client.connect();
       }
       const replies: IUserDocument[] = [];
-      const followers: string[] = await this.client.LRANGE(
-        `followers:${userId}`,
-        0,
-        -1,
-      );
+      const followers: string[] = await this.client.LRANGE(`followers:${userId}`, 0, -1);
       const users: string[] = await this.client.ZRANGE('user', 0, -1);
       const randomUsers: string[] = Helpers.shuffle(users).slice(0, 10);
       for (const key of randomUsers) {
         const followerIndex = indexOf(followers, key);
         if (followerIndex < 0) {
-          const userHash: IUserDocument = (await this.client.HGETALL(
-            `users:${key}`,
-          )) as unknown as IUserDocument;
+          const userHash: IUserDocument = (await this.client.HGETALL(`users:${key}`)) as unknown as IUserDocument;
           replies.push(userHash);
         }
       }
-      const excludedUsernameIndex: number = findIndex(replies, [
-        'username',
-        excludedUsername,
-      ]);
+      const excludedUsernameIndex: number = findIndex(replies, [ 'username', excludedUsername ]);
       replies.splice(excludedUsernameIndex, 1);
       for (const reply of replies) {
         reply.createdAt = new Date(Helpers.parseJson(`${reply.createdAt}`));
@@ -226,23 +209,13 @@ export class UserCache extends BaseCache {
     }
   }
 
-  public async updateSingleUserItemInCache(
-    userId: string,
-    prop: string,
-    value: UserItem,
-  ): Promise<IUserDocument | null> {
+  public async updateSingleUserItemInCache(userId: string, prop: string, value: UserItem): Promise<IUserDocument | null> {
     try {
       if (!this.client.isOpen) {
         await this.client.connect();
       }
-      await this.client.HSET(
-        `users:${userId}`,
-        `${prop}`,
-        JSON.stringify(value),
-      );
-      const response: IUserDocument = (await this.getUserFromCache(
-        userId,
-      )) as IUserDocument;
+      await this.client.HSET(`users:${userId}`, `${prop}`, JSON.stringify(value));
+      const response: IUserDocument = (await this.getUserFromCache(userId)) as IUserDocument;
       return response;
     } catch (error) {
       log.error(error);

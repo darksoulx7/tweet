@@ -10,9 +10,5 @@ const imageSchema: Schema = new Schema({
   createdAt: { type: Date, default: Date.now, index: true },
 });
 
-const ImageModel: Model<IFileImageDocument> = model<IFileImageDocument>(
-  'Image',
-  imageSchema,
-  'Image',
-);
+const ImageModel: Model<IFileImageDocument> = model<IFileImageDocument>('Image', imageSchema, 'Image');
 export { ImageModel };

@@ -34,7 +34,7 @@ Accept: application/json
 withCredentials: true
 
 {
-  "username": "Eduardo",
+  "username": "user1",
   "password": "abc123"
 }
 

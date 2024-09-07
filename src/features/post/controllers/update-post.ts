@@ -60,7 +60,7 @@ export class Update {
     const updatedPost: IPostDocument = {
       post, bgColor, privacy,
       feelings, gifUrl, profilePicture,
-      imgId: imgId ? imgId : '', 
+      imgId: imgId ? imgId : '',
       imgVersion: imgVersion ? imgVersion : '',
       videoId: videoId ? videoId : '',
       videoVersion: videoVersion ? videoVersion : '',
@@ -97,13 +97,9 @@ export class Update {
     socketIOPostObject.emit('update post', postUpdated, 'posts');
     updatePostQueue.addPostJob('updatePostInDB', { key: postId, value: postUpdated });
 
-    // if (image) {
-    //   addImageQueue.addImageJob('addImageToDB', {
-    //     key: `${req.currentUser!.userId}`,
-    //     imgId: result.public_id,
-    //     imgVersion: result.version.toString(),
-    //   });
-    // }
+    if (image) {
+      addImageQueue.addImageJob('addImageToDB', { key: `${req.currentUser!.userId}`, imgId: result.public_id, imgVersion: result.version.toString() });
+    }
     return result;
   }
 }
