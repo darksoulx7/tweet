@@ -130,25 +130,14 @@ describe('Add', () => {
     });
 
     it('should not upload existing image', async () => {
-      const req: Request = imagesMockRequest(
-        {},
-        {
-          image:
-            'https://res.cloudinary.com/dyamr9ym3/image/upload/v1234/123456',
-        },
-        authUserPayload,
-      ) as Request;
+      const req: Request = imagesMockRequest({}, { image: 'https://res.cloudinary.com/dyjgikbog/image/upload/v1234/123456' }, authUserPayload) as Request;
       const res: Response = imagesMockResponse();
       jest.spyOn(cloudinaryUploads, 'uploads');
 
       await Add.prototype.backgroundImage(req, res);
-      expect(cloudinaryUploads.uploads).not.toHaveBeenCalledWith(
-        req.body.image,
-      );
+      expect(cloudinaryUploads.uploads).not.toHaveBeenCalledWith(req.body.image);
       expect(res.status).toHaveBeenCalledWith(200);
-      expect(res.json).toHaveBeenCalledWith({
-        message: 'Image added successfully',
-      });
+      expect(res.json).toHaveBeenCalledWith({ message: 'Image added successfully' });
     });
 
     it('should return bad request error', async () => {
