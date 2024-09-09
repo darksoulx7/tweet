@@ -92,13 +92,8 @@ export class Add {
     const cachedUser: IUserDocument = (await userCache.getUserFromCache(`${receiverId}`)) as IUserDocument;
     if (cachedUser.notifications.messages) {
       const templateParams: INotificationTemplate = { username: receiverName, message, header: `Message notification from ${currentUser.username}` };
-      const template: string =
-        notificationTemplate.notificationMessageTemplate(templateParams);
-        directMessageEmailQueue.addEmailJob('directMessageEmail', {
-        receiverEmail: cachedUser.email!,
-        template,
-        subject: `You've received messages from ${currentUser.username}`,
-      });
+      const template: string = notificationTemplate.notificationMessageTemplate(templateParams);
+      directMessageEmailQueue.addEmailJob('directMessageEmail', { receiverEmail: cachedUser.email!, template, subject: `You've received messages from ${currentUser.username}` });
     }
   }
 }

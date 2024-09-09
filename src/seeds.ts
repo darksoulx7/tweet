@@ -37,11 +37,7 @@ function avatarColor(): string {
   return colors[floor(random(0.9) * colors.length)];
 }
 
-function generateAvatar(
-  text: string,
-  backgroundColor: string,
-  foregroundColor = 'white',
-) {
+function generateAvatar(text: string, backgroundColor: string, foregroundColor = 'white') {
   const canvas = createCanvas(200, 200);
   const context = canvas.getContext('2d');
 
