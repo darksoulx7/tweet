@@ -1,6 +1,7 @@
 import { notificationRoutes } from './features/notifications/routes/notificationRoutes';
 import { authRoutes } from '@auth/routes/authRoutes';
 import { currentUserRoutes } from '@auth/routes/currentRoutes';
+import { chatRoutes } from '@chat/routes/chatRoutes';
 import { commentRoutes } from '@comment/routes/commentRoutes';
 import { followerRoutes } from '@follower/routes/followerRoutes';
 import { authMiddleware } from '@global/helpers/auth-middleware';
@@ -11,7 +12,6 @@ import { serverAdapter } from '@service/queues/base.queue';
 import { Application } from 'express';
 
 const BASE_PATH = '/e166oahk87';
-// eslint-disable-next-line @typescript-eslint/no-unused-vars
 export default (app: Application) => {
   const routes = () => {
     app.use('/queues', serverAdapter.getRouter());
@@ -24,6 +24,7 @@ export default (app: Application) => {
     app.use(BASE_PATH, authMiddleware.verifyUser, followerRoutes.routes());
     app.use(BASE_PATH, authMiddleware.verifyUser, notificationRoutes.routes());
     app.use(BASE_PATH, authMiddleware.verifyUser, imageRoutes.routes());
+    app.use(BASE_PATH, authMiddleware.verifyUser, chatRoutes.routes());
   };
   routes();
 };

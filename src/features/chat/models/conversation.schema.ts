@@ -6,10 +6,5 @@ const conversationSchema: Schema = new Schema({
   receiverId: { type: mongoose.Schema.Types.ObjectId, ref: 'User' },
 });
 
-const ConversationModel: Model<IConversationDocument> =
-  model<IConversationDocument>(
-    'Conversation',
-    conversationSchema,
-    'Conversation',
-  );
+const ConversationModel: Model<IConversationDocument> = model<IConversationDocument>('Conversation', conversationSchema, 'Conversation');
 export { ConversationModel };
