@@ -88,7 +88,7 @@ export class Add {
     socketIOChatObject.emit('chat list', data);
   }
 
-  private async messageNotification({ currentUser, message, receiverName, receiverId}: IMessageNotification): Promise<void> {
+  private async messageNotification({ currentUser, message, receiverName, receiverId }: IMessageNotification): Promise<void> {
     const cachedUser: IUserDocument = (await userCache.getUserFromCache(`${receiverId}`)) as IUserDocument;
     if (cachedUser.notifications.messages) {
       const templateParams: INotificationTemplate = { username: receiverName, message, header: `Message notification from ${currentUser.username}` };

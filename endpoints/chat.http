@@ -21,13 +21,13 @@ withCredentials: true
 
 {
   "conversationId": "",
-  "receiverId": "",
-  "receiverUsername": "",
-  "receiverAvatarColor": "",
-  "receiverProfilePicture": "<cloudinary-user-profile-picture-url>",
-  "body": "",
+  "receiverId": "66d9eb37fc6718878e8e0dda",
+  "receiverUsername": "User3",
+  "receiverAvatarColor": "grey",
+  "receiverProfilePicture": "https://res.cloudinary.com/dyjgikbog/image/upload/v1725556928/66d9e8befc6718878e8e0dd0",
+  "body": "How the chat app is going on User3??",
   "gifUrl": "",
-  "isRead": false,
+  "isRead": true,
   "selectedImage": ""
 }
 
