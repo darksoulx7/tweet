@@ -17,7 +17,6 @@ class ReactionRoutes {
     this.router.get('/post/reactions/username/:username', authMiddleware.checkAuthentication, Get.prototype.reactionsByUsername);
     this.router.post('/post/reaction', authMiddleware.checkAuthentication, Add.prototype.reaction);
     this.router.delete('/post/reaction/:postId/:previousReaction/:postReactions', authMiddleware.checkAuthentication, Remove.prototype.reaction);
-
     return this.router;
   }
 }

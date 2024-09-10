@@ -1,11 +1,6 @@
 import { Request, Response } from 'express';
 import { authUserPayload } from '@root/mocks/auth.mock';
-import {
-  chatMessage,
-  chatMockRequest,
-  chatMockResponse,
-  messageDataMock,
-} from '@root/mocks/chat.mock';
+import { chatMessage, chatMockRequest, chatMockResponse, messageDataMock } from '@root/mocks/chat.mock';
 import { MessageCache } from '@service/redis/message.cache';
 import { Get } from '@chat/controllers/get-chat-message';
 import { chatService } from '@service/db/chat.service';

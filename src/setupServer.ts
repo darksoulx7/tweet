@@ -1,11 +1,4 @@
-import {
-  Application,
-  json,
-  urlencoded,
-  Response,
-  Request,
-  NextFunction,
-} from 'express';
+import { Application, json, urlencoded, Response, Request, NextFunction } from 'express';
 import http from 'http';
 import cors from 'cors';
 import helmet from 'helmet';
@@ -26,6 +19,7 @@ import { SocketIOFollowerHandler, socketIOFollowerObject } from '@socket/followe
 import { SocketIOUserHandler } from '@socket/user';
 import { SocketIONotificationHandler } from '@socket/notification';
 import { SocketIOImageHandler } from '@socket/image';
+import { SocketIOChatHandler } from '@socket/chat';
 
 const SERVER_PORT = 9090;
 const log: Logger = config.createLogger('server');
@@ -83,13 +77,7 @@ export class ChattyServer {
       });
     });
 
-    app.use(
-      (
-        error: IErrorResponse,
-        _req: Request,
-        res: Response,
-        next: NextFunction,
-      ) => {
+    app.use((error: IErrorResponse, _req: Request, res: Response, next: NextFunction) => {
         log.error(error);
         if (error instanceof CustomError) {
           return res.status(error.statusCode).json(error.serializeErrors());
@@ -136,16 +124,17 @@ export class ChattyServer {
 
   private socketIOConnections(io: Server): void {
     const postSocketHandler: SocketIOPostHandler = new SocketIOPostHandler(io);
-    const followerSocketHandler: SocketIOFollowerHandler  = new SocketIOFollowerHandler(io);
     const userSocketHandler: SocketIOUserHandler = new SocketIOUserHandler(io);
-    const notificationSocketHandler: SocketIONotificationHandler = new SocketIONotificationHandler();
+    const chatSocketHandler: SocketIOChatHandler = new SocketIOChatHandler(io);
+    const followerSocketHandler: SocketIOFollowerHandler  = new SocketIOFollowerHandler(io);
     const imageSocketHandler: SocketIOImageHandler = new SocketIOImageHandler();
+    const notificationSocketHandler: SocketIONotificationHandler = new SocketIONotificationHandler();
 
     postSocketHandler.listen();
-    followerSocketHandler.listen();
     userSocketHandler.listen();
-    notificationSocketHandler.listen(io);
+    chatSocketHandler.listen();
+    followerSocketHandler.listen();
     imageSocketHandler.listen(io);
-
+    notificationSocketHandler.listen(io);
   }
 }

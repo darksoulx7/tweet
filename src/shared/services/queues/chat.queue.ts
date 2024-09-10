@@ -15,7 +15,6 @@ class ChatQueue extends BaseQueue {
   }
 }
 
-// Create instances for each chat-related job
 export const addChatMessageQueue = new ChatQueue('AddChatMessageQueue', 'addChatMessageToDB', CONCURRENCY_LIMIT, chatWorker.addChatMessageToDB);
 export const markMessageAsDeletedQueue = new ChatQueue('MarkMessageAsDeletedQueue', 'markMessageAsDeletedInDB', CONCURRENCY_LIMIT, chatWorker.markMessageAsDeleted);
 export const markMessagesAsReadQueue = new ChatQueue('MarkMessagesAsReadQueue', 'markMessagesAsReadInDB', CONCURRENCY_LIMIT, chatWorker.markMessagesAsReadInDB);

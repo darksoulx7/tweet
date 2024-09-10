@@ -2,11 +2,7 @@ import { Request, Response } from 'express';
 import mongoose from 'mongoose';
 import { Server } from 'socket.io';
 import * as chatServer from '@socket/chat';
-import {
-  chatMessage,
-  chatMockRequest,
-  chatMockResponse,
-} from '@root/mocks/chat.mock';
+import { chatMessage, chatMockRequest, chatMockResponse, } from '@root/mocks/chat.mock';
 import { Add } from '@chat/controllers/add-chat-message';
 import { addChatMessageQueue } from '@service/queues/chat.queue';
 import { authUserPayload } from '@root/mocks/auth.mock';

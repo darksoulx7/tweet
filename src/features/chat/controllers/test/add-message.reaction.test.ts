@@ -2,11 +2,7 @@ import { Request, Response } from 'express';
 import { authUserPayload } from '@root/mocks/auth.mock';
 import { Server } from 'socket.io';
 import * as chatServer from '@socket/chat';
-import {
-  chatMockRequest,
-  chatMockResponse,
-  mockMessageId,
-} from '@root/mocks/chat.mock';
+import { chatMockRequest, chatMockResponse, mockMessageId } from '@root/mocks/chat.mock';
 import { MessageCache } from '@service/redis/message.cache';
 import { updateMessageReactionQueue } from '@service/queues/chat.queue';
 import { messageDataMock } from '@root/mocks/chat.mock';

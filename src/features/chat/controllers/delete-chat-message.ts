@@ -9,25 +9,12 @@ import { markMessageAsDeletedQueue } from '@service/queues/chat.queue';
 const messageCache: MessageCache = new MessageCache();
 
 export class Delete {
-  public async markMessageAsDeleted(
-    req: Request,
-    res: Response,
-  ): Promise<void> {
+  public async markMessageAsDeleted(req: Request, res: Response): Promise<void> {
     const { senderId, receiverId, messageId, type } = req.params;
-    const updatedMessage: IMessageData =
-      await messageCache.markMessageAsDeleted(
-        `${senderId}`,
-        `${receiverId}`,
-        `${messageId}`,
-        type,
-      );
+    const updatedMessage: IMessageData = await messageCache.markMessageAsDeleted(`${senderId}`, `${receiverId}`, `${messageId}`, type);
     socketIOChatObject.emit('message read', updatedMessage);
     socketIOChatObject.emit('chat list', updatedMessage);
-    markMessageAsDeletedQueue.addChatJob('markMessageAsDeletedInDB', {
-      messageId: new mongoose.Types.ObjectId(messageId),
-      type,
-    });
-
+    markMessageAsDeletedQueue.addChatJob('markMessageAsDeletedInDB', { messageId: new mongoose.Types.ObjectId(messageId), type });
     res.status(HTTP_STATUS.OK).json({ message: 'Message marked as deleted' });
   }
 }
