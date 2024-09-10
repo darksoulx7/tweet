@@ -34,12 +34,26 @@ class ChatService {
     const messages: IMessageData[] = await MessageModel.aggregate([
       { $match: { $or: [{ senderId: userId }, { receiverId: userId }] } },
       { $group: { _id: '$conversationId', result: { $last: '$$ROOT' } } },
-      { $project: { _id: '$result._id', conversationId: '$result.conversationId', receiverId: '$result.receiverId', 
-        receiverUsername: '$result.receiverUsername', receiverAvatarColor: '$result.receiverAvatarColor',
-        receiverProfilePicture: '$result.receiverProfilePicture', senderUsername: '$result.senderUsername', 
-        senderId: '$result.senderId', senderAvatarColor: '$result.senderAvatarColor', 
-        senderProfilePicture: '$result.senderProfilePicture', body: '$result.body', isRead: '$result.isRead', 
-        gifUrl: '$result.gifUrl', selectedImage: '$result.selectedImage', reaction: '$result.reaction', createdAt: '$result.createdAt' }},
+      {
+        $project: {
+          _id: '$result._id',
+          conversationId: '$result.conversationId',
+          receiverId: '$result.receiverId',
+          receiverUsername: '$result.receiverUsername',
+          receiverAvatarColor: '$result.receiverAvatarColor',
+          receiverProfilePicture: '$result.receiverProfilePicture',
+          senderUsername: '$result.senderUsername',
+          senderId: '$result.senderId',
+          senderAvatarColor: '$result.senderAvatarColor',
+          senderProfilePicture: '$result.senderProfilePicture',
+          body: '$result.body',
+          isRead: '$result.isRead',
+          gifUrl: '$result.gifUrl',
+          selectedImage: '$result.selectedImage',
+          reaction: '$result.reaction',
+          createdAt: '$result.createdAt',
+        },
+      },
       { $sort: { createdAt: 1 } },
     ]);
     return messages;
@@ -69,6 +83,7 @@ class ChatService {
     await MessageModel.updateMany(query, { $set: { isRead: true } }).exec();
   }
 
+  // TODO - update the reaction obj instead of push
   public async updateMessageReaction(messageId: ObjectId, senderName: string, reaction: string, type: 'add' | 'remove'): Promise<void> {
     if (type === 'add') {
       await MessageModel.updateOne({ _id: messageId }, { $push: { reaction: { senderName, type: reaction } } }).exec();

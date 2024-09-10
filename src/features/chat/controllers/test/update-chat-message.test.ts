@@ -6,7 +6,7 @@ import * as chatServer from '@socket/chat';
 import { chatMockRequest, chatMockResponse } from '@root/mocks/chat.mock';
 import { existingUser } from '@root/mocks/user.mock';
 import { MessageCache } from '@service/redis/message.cache';
-import { updateMessageReactionQueue } from '@service/queues/chat.queue';
+import { markMessagesAsReadQueue } from '@service/queues/chat.queue';
 import { messageDataMock } from '@root/mocks/chat.mock';
 
 jest.useFakeTimers();
@@ -75,10 +75,10 @@ describe('Update', () => {
       jest
         .spyOn(MessageCache.prototype, 'updateChatMessages')
         .mockResolvedValue(messageDataMock);
-      jest.spyOn(updateMessageReactionQueue, 'addChatJob');
+      jest.spyOn(markMessagesAsReadQueue, 'addChatJob');
 
       await Update.prototype.message(req, res);
-      expect(updateMessageReactionQueue.addChatJob).toHaveBeenCalled();
+      expect(markMessagesAsReadQueue.addChatJob).toHaveBeenCalled();
       expect(res.status).toHaveBeenCalledWith(200);
       expect(res.json).toHaveBeenCalledWith({
         message: 'Message marked as read',
