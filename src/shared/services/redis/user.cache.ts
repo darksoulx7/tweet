@@ -1,7 +1,7 @@
 import { BaseCache } from '@service/redis/base.cache';
 import { INotificationSettings, ISocialLinks, IUserDocument } from '@user/interfaces/user.interface';
 import Logger from 'bunyan';
-import { indexOf, findIndex } from 'lodash';
+import { indexOf, findIndex, isEmpty } from 'lodash';
 import { config } from '@root/config';
 import { ServerError } from '@global/helpers/error-handler';
 import { Helpers } from '@global/helpers/helpers';
@@ -93,23 +93,26 @@ export class UserCache extends BaseCache {
       }
 
       const response: IUserDocument = (await this.client.HGETALL(`users:${userId}`)) as unknown as IUserDocument;
-      response.createdAt = new Date(Helpers.parseJson(`${response.createdAt}`));
-      response.postsCount = Helpers.parseJson(`${response.postsCount}`);
-      response.blocked = Helpers.parseJson(`${response.blocked}`);
-      response.blockedBy = Helpers.parseJson(`${response.blockedBy}`);
-      response.notifications = Helpers.parseJson(`${response.notifications}`);
-      response.social = Helpers.parseJson(`${response.social}`);
-      response.followersCount = Helpers.parseJson(`${response.followersCount}`);
-      response.followingCount = Helpers.parseJson(`${response.followingCount}`);
-      response.bgImageId = Helpers.parseJson(`${response.bgImageId}`);
-      response.bgImageVersion = Helpers.parseJson(`${response.bgImageVersion}`);
-      response.profilePicture = Helpers.parseJson(`${response.profilePicture}`);
-      response.work = Helpers.parseJson(`${response.work}`);
-      response.school = Helpers.parseJson(`${response.school}`);
-      response.location = Helpers.parseJson(`${response.location}`);
-      response.quote = Helpers.parseJson(`${response.quote}`);
-
-      return response;
+      if (!isEmpty(response)) {
+        response.createdAt = new Date(Helpers.parseJson(`${response.createdAt}`));
+        response.postsCount = Helpers.parseJson(`${response.postsCount}`);
+        response.blocked = Helpers.parseJson(`${response.blocked}`);
+        response.blockedBy = Helpers.parseJson(`${response.blockedBy}`);
+        response.notifications = Helpers.parseJson(`${response.notifications}`);
+        response.social = Helpers.parseJson(`${response.social}`);
+        response.followersCount = Helpers.parseJson(`${response.followersCount}`);
+        response.followingCount = Helpers.parseJson(`${response.followingCount}`);
+        response.bgImageId = Helpers.parseJson(`${response.bgImageId}`);
+        response.bgImageVersion = Helpers.parseJson(`${response.bgImageVersion}`);
+        response.profilePicture = Helpers.parseJson(`${response.profilePicture}`);
+        response.work = Helpers.parseJson(`${response.work}`);
+        response.school = Helpers.parseJson(`${response.school}`);
+        response.location = Helpers.parseJson(`${response.location}`);
+        response.quote = Helpers.parseJson(`${response.quote}`);
+        return response;
+      }
+      return null;
+      
     } catch (error) {
       log.error(error);
       throw new ServerError('Server error. Try again.');
@@ -121,13 +124,14 @@ export class UserCache extends BaseCache {
       if (!this.client.isOpen) {
         await this.client.connect();
       }
-      const response: string[] = await this.client.ZRANGE('user', start, end, { REV: true });
+      const response: string[] = await this.client.ZRANGE('user', start, end);
       const multi: ReturnType<typeof this.client.multi> = this.client.multi();
-      for (const key of response) {
-        if (key !== excludedUserKey) {
-          multi.HGETALL(`users:${key}`);
-        }
+      for (let i = response.length - 1; i >= 0; i--) {
+        if (response[i] !== excludedUserKey) {
+            multi.HGETALL(`users:${response[i]}`);
+          }
       }
+
       const replies: UserCacheMultiType = (await multi.exec()) as UserCacheMultiType;
       const userReplies: IUserDocument[] = [];
       for (const reply of replies as IUserDocument[]) {

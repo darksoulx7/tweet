@@ -14,15 +14,12 @@ export class SocketIOPostHandler {
 
   public listen(): void {
     this.io.on('connection', (socket: Socket) => {
-      // socket.on('reaction', (reaction: IReactionDocument) => {
-      //   this.io.emit('update like', reaction);
-      // });
-
-      console.log('Post socket io handler');
-
-      // socket.on('comment', (data: ICommentDocument) => {
-      //   this.io.emit('update comment', data);
-      // });
+      socket.on('reaction', (reaction: IReactionDocument) => {
+        this.io.emit('update like', reaction);
+      });
+      socket.on('comment', (data: ICommentDocument) => {
+        this.io.emit('update comment', data);
+      });
     });
   }
 }

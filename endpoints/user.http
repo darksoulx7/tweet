@@ -2,7 +2,7 @@
 @urlPath = e166oahk87
 
 ###
-GET {{baseUrl}}/{{urlPath}}/user/all/<page-number>
+GET {{baseUrl}}/{{urlPath}}/user/all/1
 # GET {{baseUrl}}/{{urlPath}}/user/all/1
 Content-Type: application/json
 Accept: application/json
@@ -15,13 +15,13 @@ Accept: application/json
 withCredentials: true
 
 ###
-GET {{baseUrl}}/{{urlPath}}/user/profile/<userId>
+GET {{baseUrl}}/{{urlPath}}/user/profile/66d9e72579b67cdf7b276da4
 Content-Type: application/json
 Accept: application/json
 withCredentials: true
 
 ###
-GET {{baseUrl}}/{{urlPath}}/user/profile/posts/<username>/<userId>/<uId>
+GET {{baseUrl}}/{{urlPath}}/user/profile/posts/User1/66d9e72579b67cdf7b276da4/<uId>
 Content-Type: application/json
 Accept: application/json
 withCredentials: true
