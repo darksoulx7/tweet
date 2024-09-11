@@ -13,20 +13,14 @@ export class Edit {
     for (const [key, value] of Object.entries(req.body)) {
       await userCache.updateSingleUserItemInCache(`${req.currentUser!.userId}`, key, `${value}`);
     }
-    updateBasicInfoQueue.addUserJob('updateBasicInfoInDB', {
-      key: `${req.currentUser!.userId}`,
-      value: req.body
-    });
+    updateBasicInfoQueue.addUserJob('updateBasicInfoInDB', { key: `${req.currentUser!.userId}`, value: req.body });
     res.status(HTTP_STATUS.OK).json({ message: 'Updated successfully' });
   }
 
   @joiValidation(socialLinksSchema)
   public async social(req: Request, res: Response): Promise<void> {
     await userCache.updateSingleUserItemInCache(`${req.currentUser!.userId}`, 'social', req.body);
-    updateSocialLinksQueue.addUserJob('updateSocialLinksInDB', {
-      key: `${req.currentUser!.userId}`,
-      value: req.body
-    });
+    updateSocialLinksQueue.addUserJob('updateSocialLinksInDB', { key: `${req.currentUser!.userId}`, value: req.body });
     res.status(HTTP_STATUS.OK).json({ message: 'Updated successfully' });
   }
 }

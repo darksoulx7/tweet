@@ -19,19 +19,3 @@ export const addUserProfileImageQueue = new ImageQueue('AddUserProfileImageQueue
 export const updateBGImageQueue = new ImageQueue('UpdateBGImageQueue', 'updateBGImageInDB', CONCURRENCY_LIMIT, imageWorker.updateBGImageInDB);
 export const addImageQueue = new ImageQueue('AddImageQueue', 'addImageToDB', CONCURRENCY_LIMIT, imageWorker.addImageToDB);
 export const removeImageQueue = new ImageQueue('RemoveImageQueue', 'removeImageFromDB', CONCURRENCY_LIMIT, imageWorker.removeImageFromDB);
-
-// export function addUserProfileImage(imageData: IFileImageJobData): void {
-//   addUserProfileImageQueue.addImageJob('addUserProfileImageToDB', imageData);
-// }
-
-// export function updateBGImage(imageData: IFileImageJobData): void {
-//   updateBGImageQueue.addImageJob('updateBGImageInDB', imageData);
-// }
-
-// export function addImage(imageData: IFileImageJobData): void {
-//   addImageQueue.addImageJob('addImageToDB', imageData);
-// }
-
-// export function removeImage(imageData: IFileImageJobData): void {
-//   removeImageQueue.addImageJob('removeImageFromDB', imageData);
-// }

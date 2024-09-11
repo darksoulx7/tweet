@@ -11,13 +11,7 @@ export class UpdateSettings {
   @joiValidation(notificationSettingsSchema)
   public async notification(req: Request, res: Response): Promise<void> {
     await userCache.updateSingleUserItemInCache(`${req.currentUser!.userId}`, 'notifications', req.body);
-    updateNotificationSettingsQueue.addUserJob('updateNotificationSettings', {
-      key: `${req.currentUser!.userId}`,
-      value: req.body
-    });
-    res.status(HTTP_STATUS.OK).json({
-      message: 'Notification settings updated successfully',
-      settings: req.body,
-    });
+    updateNotificationSettingsQueue.addUserJob('updateNotificationSettings', { key: `${req.currentUser!.userId}`, value: req.body });
+    res.status(HTTP_STATUS.OK).json({ message: 'Notification settings updated successfully', settings: req.body });
   }
 }

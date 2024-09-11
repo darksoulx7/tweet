@@ -17,11 +17,3 @@ class NotificationQueue extends BaseQueue {
 
 export const updateNotificationQueue = new NotificationQueue('UpdateNotificationQueue', 'updateNotification', CONCURRENCY_LIMIT, notificationWorker.updateNotification);
 export const deleteNotificationQueue = new NotificationQueue('DeleteNotificationQueue', 'deleteNotification', CONCURRENCY_LIMIT, notificationWorker.deleteNotification);
-
-// export function updateNotification(notificationData: INotificationJobData): void {
-//   updateNotificationQueue.addNotificationJob('updateNotification', notificationData);
-// }
-
-// export function deleteNotification(notificationData: INotificationJobData): void {
-//   deleteNotificationQueue.addNotificationJob('deleteNotification', notificationData);
-// }

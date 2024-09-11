@@ -21,27 +21,3 @@ export const followersEmailQueue = new EmailQueue('FollowersEmailQueue', 'follow
 export const reactionsEmailQueue = new EmailQueue('ReactionsEmailQueue', 'reactionsEmail', CONCURRENCY_LIMIT, emailWorker.addNotificationEmail);
 export const directMessageEmailQueue = new EmailQueue('DirectMessageEmailQueue', 'directMessageEmail', CONCURRENCY_LIMIT, emailWorker.addNotificationEmail);
 export const changePasswordEmailQueue = new EmailQueue('ChangePasswordQueue', 'changePassword', CONCURRENCY_LIMIT, emailWorker.addNotificationEmail);
-
-// export function sendForgotPasswordEmail(emailData: IEmailJob): void {
-//   forgotPasswordEmailQueue.addEmailJob('forgotPasswordEmail', emailData);
-// }
-
-// export function sendCommentsEmail(emailData: IEmailJob): void {
-//   commentsEmailQueue.addEmailJob('commentsEmail', emailData);
-// }
-
-// export function sendFollowersEmail(emailData: IEmailJob): void {
-//   followersEmailQueue.addEmailJob('followersEmail', emailData);
-// }
-
-// export function sendReactionsEmail(emailData: IEmailJob): void {
-//   reactionsEmailQueue.addEmailJob('reactionsEmail', emailData);
-// }
-
-// export function sendDirectMessageEmail(emailData: IEmailJob): void {
-//   directMessageEmailQueue.addEmailJob('directMessageEmail', emailData);
-// }
-
-// export function sendChangePasswordEmail(emailData: IEmailJob): void {
-//   changePasswordEmailQueue.addEmailJob('changePassword', emailData);
-// }

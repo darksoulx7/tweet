@@ -1,9 +1,5 @@
 import { BaseCache } from '@service/redis/base.cache';
-import {
-  INotificationSettings,
-  ISocialLinks,
-  IUserDocument,
-} from '@user/interfaces/user.interface';
+import { INotificationSettings, ISocialLinks, IUserDocument } from '@user/interfaces/user.interface';
 import Logger from 'bunyan';
 import { indexOf, findIndex } from 'lodash';
 import { config } from '@root/config';
@@ -26,11 +22,7 @@ export class UserCache extends BaseCache {
     super('userCache');
   }
 
-  public async saveUserToCache(
-    key: string,
-    userUId: string,
-    createdUser: IUserDocument,
-  ): Promise<void> {
+  public async saveUserToCache(key: string, userUId: string, createdUser: IUserDocument): Promise<void> {
     const createdAt = new Date();
     const {
       _id,
@@ -53,6 +45,7 @@ export class UserCache extends BaseCache {
       bgImageVersion,
       social,
     } = createdUser;
+
     const dataToSave = {
       _id: `${_id}`,
       uId: `${uId}`,
@@ -135,8 +128,7 @@ export class UserCache extends BaseCache {
           multi.HGETALL(`users:${key}`);
         }
       }
-      const replies: UserCacheMultiType =
-        (await multi.exec()) as UserCacheMultiType;
+      const replies: UserCacheMultiType = (await multi.exec()) as UserCacheMultiType;
       const userReplies: IUserDocument[] = [];
       for (const reply of replies as IUserDocument[]) {
         reply.createdAt = new Date(Helpers.parseJson(`${reply.createdAt}`));
@@ -164,10 +156,7 @@ export class UserCache extends BaseCache {
     }
   }
 
-  public async getRandomUsersFromCache(
-    userId: string,
-    excludedUsername: string,
-  ): Promise<IUserDocument[]> {
+  public async getRandomUsersFromCache(userId: string, excludedUsername: string): Promise<IUserDocument[]> {
     try {
       if (!this.client.isOpen) {
         await this.client.connect();

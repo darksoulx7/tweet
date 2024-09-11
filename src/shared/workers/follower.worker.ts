@@ -9,12 +9,7 @@ class FollowerWorker {
   async addFollowerToDB(job: Job): Promise<void> {
     try {
       const { keyOne, keyTwo, username, followerDocumentId } = job.data;
-      await followerService.addFollowerToDB(
-        keyOne,
-        keyTwo,
-        username,
-        followerDocumentId,
-      );
+      await followerService.addFollowerToDB(keyOne, keyTwo, username, followerDocumentId);
       job.updateProgress(100);
     } catch (error) {
       log.error(error);

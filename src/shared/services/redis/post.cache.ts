@@ -2,10 +2,7 @@ import { BaseCache } from '@service/redis/base.cache';
 import Logger from 'bunyan';
 import { config } from '@root/config';
 import { ServerError } from '@global/helpers/error-handler';
-import {
-  ISavePostToCache,
-  IPostDocument,
-} from '@post/interfaces/post.interface';
+import { ISavePostToCache, IPostDocument } from '@post/interfaces/post.interface';
 import { Helpers } from '@global/helpers/helpers';
 import { RedisCommandRawReply } from '@redis/client/dist/lib/commands';
 import { IReactions } from '@reaction/interfaces/reaction.interface';
@@ -74,15 +71,9 @@ export class PostCache extends BaseCache {
         await this.client.connect();
       }
 
-      const postCount: string[] = await this.client.HMGET(
-        `users:${currentUserId}`,
-        'postsCount',
-      );
+      const postCount: string[] = await this.client.HMGET(`users:${currentUserId}`, 'postsCount');
       const multi: ReturnType<typeof this.client.multi> = this.client.multi();
-      await this.client.ZADD('post', {
-        score: parseInt(uId, 10),
-        value: `${key}`,
-      });
+      await this.client.ZADD('post', { score: parseInt(uId, 10), value: `${key}` });
       for (const [itemKey, itemValue] of Object.entries(dataToSave)) {
         multi.HSET(`posts:${key}`, `${itemKey}`, `${itemValue}`);
       }
@@ -146,9 +137,6 @@ export class PostCache extends BaseCache {
 
       const reply: string[] = await this.client.ZRANGE(key, start, end);
       const multi: ReturnType<typeof this.client.multi> = this.client.multi();
-      // for (const value of reply) {
-      //   multi.HGETALL(`posts:${value}`);
-      // }
 
       for (let i = reply.length - 1; i >= 0; i--) {
         multi.HGETALL(`posts:${reply[i]}`);
@@ -184,18 +172,13 @@ export class PostCache extends BaseCache {
       for (let i = reply.length - 1; i >= 0; i--) {
         multi.HGETALL(`posts:${reply[i]}`);
       }
-      const replies: PostCacheMultiType =
-        (await multi.exec()) as PostCacheMultiType;
+      const replies: PostCacheMultiType = (await multi.exec()) as PostCacheMultiType; 
       const postWithVideos: IPostDocument[] = [];
       for (const post of replies as IPostDocument[]) {
         if (post.videoId && post.videoVersion) {
-          post.commentsCount = Helpers.parseJson(
-            `${post.commentsCount}`,
-          ) as number;
+          post.commentsCount = Helpers.parseJson(`${post.commentsCount}`) as number;
           post.reactions = Helpers.parseJson(`${post.reactions}`) as IReactions;
-          post.createdAt = new Date(
-            Helpers.parseJson(`${post.createdAt}`),
-          ) as Date;
+          post.createdAt = new Date(Helpers.parseJson(`${post.createdAt}`)) as Date;
           postWithVideos.push(post);
         }
       }
@@ -272,10 +255,7 @@ export class PostCache extends BaseCache {
     }
   }
 
-  public async updatePostInCache(
-    key: string,
-    updatedPost: IPostDocument,
-  ): Promise<IPostDocument> {
+  public async updatePostInCache(key: string, updatedPost: IPostDocument): Promise<IPostDocument> {
     const { post, bgColor, feelings, privacy, gifUrl, imgVersion, imgId, videoId, videoVersion, profilePicture } = updatedPost;
     const dataToSave = {
       post: `${post}`,

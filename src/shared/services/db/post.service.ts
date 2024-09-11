@@ -48,7 +48,7 @@ class PostService {
   public async deletePost(postId: string, userId: string): Promise<void> {
     const deletePost: Query<IQueryComplete & IQueryDeleted, IPostDocument> =
       PostModel.deleteOne({ _id: postId });
-    // delete reactions here
+    // TODO delete reactions here
     const decrementPostCount: UpdateQuery<IUserDocument> = UserModel.updateOne(
       { _id: userId },
       { $inc: { postsCount: -1 } },

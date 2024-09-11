@@ -4,7 +4,7 @@ import { Server } from 'socket.io';
 import * as userServer from '@socket/user';
 import { Edit } from '@user/controllers/update-basic-info';
 import { UserCache } from '@service/redis/user.cache';
-import { addUserQueue, updateBasicInfoQueue, updateSocialLinksQueue } from '@service/queues/user.queue';
+import { updateBasicInfoQueue, updateSocialLinksQueue } from '@service/queues/user.queue';
 
 jest.useFakeTimers();
 jest.mock('@service/queues/base.queue');

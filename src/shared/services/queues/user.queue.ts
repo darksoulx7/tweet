@@ -19,19 +19,3 @@ export const addUserQueue = new UserQueue('AddUserQueue', 'addUserToDB', CONCURR
 export const updateSocialLinksQueue = new UserQueue('UpdateSocialLinksQueue', 'updateSocialLinksInDB', CONCURRENCY_LIMIT, userWorker.updateSocialLinks);
 export const updateBasicInfoQueue = new UserQueue('UpdateBasicInfoQueue', 'updateBasicInfoInDB', CONCURRENCY_LIMIT, userWorker.updateUserInfo);
 export const updateNotificationSettingsQueue = new UserQueue('UpdateNotificationSettingsQueue', 'updateNotificationSettings', CONCURRENCY_LIMIT, userWorker.updateNotificationSettings);
-
-// export function addUser(userData: IUserJob): void {
-//   addUserQueue.addUserJob('addUserToDB', userData);
-// }
-
-// export function updateSocialLinks(userData: IUserJob): void {
-//   updateSocialLinksQueue.addUserJob('updateSocialLinksInDB', userData);
-// }
-
-// export function updateBasicInfo(userData: IUserJob): void {
-//   updateBasicInfoQueue.addUserJob('updateBasicInfoInDB', userData);
-// }
-
-// export function updateNotificationSettings(userData: IUserJob): void {
-//   updateNotificationSettingsQueue.addUserJob('updateNotificationSettings', userData);
-// }

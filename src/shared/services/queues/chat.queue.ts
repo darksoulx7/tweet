@@ -19,19 +19,3 @@ export const addChatMessageQueue = new ChatQueue('AddChatMessageQueue', 'addChat
 export const markMessageAsDeletedQueue = new ChatQueue('MarkMessageAsDeletedQueue', 'markMessageAsDeletedInDB', CONCURRENCY_LIMIT, chatWorker.markMessageAsDeleted);
 export const markMessagesAsReadQueue = new ChatQueue('MarkMessagesAsReadQueue', 'markMessagesAsReadInDB', CONCURRENCY_LIMIT, chatWorker.markMessagesAsReadInDB);
 export const updateMessageReactionQueue = new ChatQueue('UpdateMessageReactionQueue', 'updateMessageReaction', CONCURRENCY_LIMIT, chatWorker.updateMessageReaction);
-
-// export function addChatMessage(chatData: IChatJobData): void {
-//   addChatMessageQueue.addChatJob('addChatMessageToDB', chatData);
-// }
-
-// export function markMessageAsDeleted(messageData: IMessageData): void {
-//   markMessageAsDeletedQueue.addChatJob('markMessageAsDeletedInDB', messageData);
-// }
-
-// export function markMessagesAsRead(messageData: IMessageData): void {
-//   markMessagesAsReadQueue.addChatJob('markMessagesAsReadInDB', messageData);
-// }
-
-// export function updateMessageReaction(messageData: IMessageData): void {
-//   updateMessageReactionQueue.addChatJob('updateMessageReaction', messageData);
-// }
