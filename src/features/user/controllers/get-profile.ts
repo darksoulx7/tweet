@@ -54,12 +54,8 @@ export class Get {
     const userName: string = Helpers.firstLetterUppercase(username);
     const cachedUser: IUserDocument = (await userCache.getUserFromCache(userId)) as IUserDocument;
     const cachedUserPosts: IPostDocument[] = await postCache.getUserPostsFromCache('post', parseInt(uId, 10));
-
     const existingUser: IUserDocument = cachedUser ? cachedUser : await userService.getUserById(userId);
-    const userPosts: IPostDocument[] = cachedUserPosts.length
-      ? cachedUserPosts
-      : await postService.getPosts({ username: userName }, 0, 100, { createdAt: -1 });
-
+    const userPosts: IPostDocument[] = cachedUserPosts.length ? cachedUserPosts : await postService.getPosts({ username: userName }, 0, 100, { createdAt: -1 });
     res.status(HTTP_STATUS.OK).json({ message: 'Get user profile and posts', user: existingUser, posts: userPosts });
   }
 
