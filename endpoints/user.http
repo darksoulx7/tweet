@@ -21,7 +21,7 @@ Accept: application/json
 withCredentials: true
 
 ###
-GET {{baseUrl}}/{{urlPath}}/user/profile/posts/User1/66d9e72579b67cdf7b276da4/809023408111
+GET {{baseUrl}}/{{urlPath}}/user/profile/posts/Huser1/66f25ddcd3bee1205df4d75e/851734346686
 Content-Type: application/json
 Accept: application/json
 withCredentials: true
@@ -33,7 +33,7 @@ Accept: application/json
 withCredentials: true
 
 ###
-GET {{baseUrl}}/{{urlPath}}/user/profile/search/<search-username-query>
+GET {{baseUrl}}/{{urlPath}}/user/profile/search/user
 Content-Type: application/json
 Accept: application/json
 withCredentials: true
@@ -45,9 +45,9 @@ Accept: application/json
 withCredentials: true
 
 {
-  "currentPassword": "",
-  "newPassword": "",
-  "confirmPassword": ""
+  "currentPassword": "Huser123",
+  "newPassword": "user123",
+  "confirmPassword": "user123"
 }
 
 ###
@@ -57,10 +57,10 @@ Accept: 'application/json'
 withCredentials: true
 
 {
-  "quote": "",
-  "work": "",
-  "school": "",
-  "location": ""
+  "quote": "Try try dont cry",
+  "work": "yo!!",
+  "school": "N/A",
+  "location": "Ahmedabas"
 }
 
 ###
@@ -70,10 +70,10 @@ Accept: 'application/json'
 withCredentials: true
 
 {
-  "instagram": "",
-  "twitter": "",
-  "facebook": "",
-  "youtube": ""
+  "instagram": "N/A",
+  "twitter": "x",
+  "facebook": "n",
+  "youtube": "opxouiweqe"
 }
 
 ###

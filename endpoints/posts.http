@@ -25,11 +25,11 @@ withCredentials: true
 # Feelings - like | love | wow | happy | sad | angry
 
 {
-  "post": "f7 post",
+  "post": "f3 post",
   "bgColor": "#123456",
   "privacy": "Public",
   "gifUrl": "",
-  "profilePicture": "https://res.cloudinary.com/dyjgikbog/image/upload/v1724149982/66c470dd89c67d47b5a9e3b7",
+  "profilePicture": "https://res.cloudinary.com/dyjgikbog/image/upload/v1727159774/66f25ddcd3bee1205df4d75e",
   "feelings": ""
 }
 
