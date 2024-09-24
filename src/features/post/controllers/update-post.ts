@@ -45,8 +45,7 @@ export class Update {
     if (videoId && videoVersion) {
       Update.prototype.updatePost(req);
     } else {
-      const result: UploadApiResponse =
-        await Update.prototype.addImageToExistingPost(req);
+      const result: UploadApiResponse = await Update.prototype.addImageToExistingPost(req);
       if (!result.public_id) {
         throw new BadRequestError(result.message);
       }

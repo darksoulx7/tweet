@@ -84,8 +84,7 @@ export class Create {
 
   @joiValidation(postWithVideoSchema)
   public async postWithVideo(req: Request, res: Response): Promise<void> {
-    const { post, bgColor, privacy, gifUrl, profilePicture, feelings, video } =
-      req.body;
+    const { post, bgColor, privacy, gifUrl, profilePicture, feelings, video } = req.body;
 
     const result: UploadApiResponse = (await videoUpload(video)) as UploadApiResponse;
     if (!result?.public_id) {
