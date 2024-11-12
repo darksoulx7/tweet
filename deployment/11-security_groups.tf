@@ -88,8 +88,8 @@ resource "aws_security_group" "autoscaling_group_sg" {
   }
 
   ingress {
-    from_port       = 5000
-    to_port         = 5000
+    from_port       = 9090
+    to_port         = 9090
     protocol        = "TCP"
     security_groups = [aws_security_group.alb_sg.id]
     description     = "Allows access to webserver through ALB"
