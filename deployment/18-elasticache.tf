@@ -18,7 +18,7 @@ resource "aws_elasticache_replication_group" "chatapp_redis_cluster" {
   depends_on = [aws_security_group.elasticache_sg]
 
   provisioner "local-exec" {
-    command = file("./userdata/update-env-file.sh")
+    command = "bash ./userdata/update-env-file.sh"
 
     environment = {
       ELASTICACHE_ENDPOINT = self.primary_endpoint_address

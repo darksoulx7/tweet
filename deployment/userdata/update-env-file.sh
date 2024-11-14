@@ -1,27 +1,25 @@
-#!/bin/bash
+#!/bin/sh
 
-function program_is_installed {
+program_is_installed() {
   # Default return value assuming the program is installed (1 means installed)
-  local return_=1
-  
+  return_=1
+
   # Check if the program is installed using `type` and suppress output
   type $1 >/dev/null 2>&1 || return_=0  # If `type` fails, set return_=0
-  
+
   # Output the result: 1 if installed, 0 if not
   echo "$return_"
 }
 
 # Ensure AWS CLI is available
-if [ $(program_is_installed aws) == 0 ]; then
+if [ $(program_is_installed aws) -eq 0 ]; then
   echo "AWS CLI is not installed. Exiting."
   exit 1
 fi
 
 # Ensure zip is available, if not, install it (assuming Alpine Linux)
-if [ $(program_is_installed zip) == 0 ]; then
+if [ $(program_is_installed zip) -eq 0 ]; then
   echo "zip is not installed, installing..."
-  # Add installation command based on your system. Here is an example for Alpine Linux.
-  # For Ubuntu/Debian, you would use `apt-get install zip -y`
   apk update && apk add zip
   if [ $? -ne 0 ]; then
     echo "Failed to install zip. Exiting."

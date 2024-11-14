@@ -1,3 +1,4 @@
+/*
 resource "aws_autoscaling_policy" "asg_scale_out_policy" {
   name                   = "ASG-SCALE-OUT-POLICY"
   autoscaling_group_name = aws_autoscaling_group.ec2_autoscaling_group.name
@@ -59,3 +60,4 @@ resource "aws_cloudwatch_metric_alarm" "ec2_scale_in_alarm" {
     aws_autoscaling_group.ec2_autoscaling_group
   ]
 }
+*/

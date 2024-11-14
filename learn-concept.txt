@@ -6,3 +6,19 @@ user3 - [user1]
  _______          _______    _______
 | user1 |        | user2 |  | user3 |
  _______          _______    _______
+
+
+// !important. to void ssl certificate validation
+terraform state rm aws_acm_certificate.dev_cert
+terraform import aws_acm_certificate.dev_cert arn:aws:acm:us-east-1:762233755182:certificate/7b90033c-917d-4c23-9783-f7a5abb3751f
+
+// terraform commands!
+terraform apply -target=aws_elasticache_replication_group.chatapp_redis_cluster
+terraform destroy -target=aws_elasticache_replication_group.chatapp_redis_cluster    
+
+terraform plan -refresh-only
+terraform init
+terraform fmt
+terraform validate
+terraform apply -auto-approve
+terraform init -reconfigure
